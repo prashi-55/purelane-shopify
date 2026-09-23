@@ -1,0 +1,252 @@
+<section
+  id="purelane-combos-{{ section.id }}"
+  class="purelane-combos"
+  aria-labelledby="purelane-combos-heading-{{ section.id }}"
+>
+  <div class="purelane-combos__inner">
+
+    <div class="purelane-combos__header">
+      <div>
+        {% if section.settings.eyebrow != blank %}
+          <p class="purelane-combos__eyebrow">
+            {{ section.settings.eyebrow }}
+          </p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 id="purelane-combos-heading-{{ section.id }}">
+            {{ section.settings.heading }}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.description != blank %}
+          <div class="purelane-combos__description">
+            {{ section.settings.description }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if section.settings.show_shop_all and section.settings.shop_all_link != blank %}
+        <a
+          class="purelane-combos__shop-all"
+          href="{{ section.settings.shop_all_link }}"
+        >
+          {{ section.settings.shop_all_label }}
+          <span aria-hidden="true">→</span>
+        </a>
+      {% endif %}
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      <div class="purelane-combos__grid">
+
+        {% for block in section.blocks %}
+          {% assign combo_product = block.settings.product %}
+
+          <article
+            class="purelane-combo-card"
+            {{ block.shopify_attributes }}
+          >
+
+            <div class="purelane-combo-card__media">
+              {% if combo_product != blank and combo_product.featured_image != blank %}
+
+                <a
+                  href="{{ combo_product.url }}"
+                  class="purelane-combo-card__image-link"
+                  aria-label="View {{ combo_product.title | escape }}"
+                >
+                  {{
+                    combo_product.featured_image
+                    | image_url: width: 900
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360, 540, 720, 900',
+                      sizes: '(min-width: 990px) 33vw, 90vw',
+                      class: 'purelane-combo-card__image',
+                      alt: combo_product.featured_image.alt | default: combo_product.title
+                  }}
+                </a>
+
+              {% else %}
+                <div class="purelane-combo-card__placeholder">
+                  <span>No image</span>
+                </div>
+              {% endif %}
+
+              {% if block.settings.combo_label != blank %}
+                <span class="purelane-combo-card__badge">
+                  {{ block.settings.combo_label }}
+                </span>
+              {% endif %}
+            </div>
+
+            <div class="purelane-combo-card__content">
+
+              {% if combo_product != blank %}
+                <h3 class="purelane-combo-card__title">
+                  <a href="{{ combo_product.url }}">
+                    {{ combo_product.title }}
+                  </a>
+                </h3>
+              {% else %}
+                <h3 class="purelane-combo-card__title">
+                  Select a product
+                </h3>
+              {% endif %}
+
+              {% if block.settings.description != blank %}
+                <p class="purelane-combo-card__description">
+                  {{ block.settings.description }}
+                </p>
+              {% endif %}
+
+              <div class="purelane-combo-card__footer">
+
+                {% if combo_product != blank %}
+                  <div class="purelane-combo-card__price">
+                    {% if combo_product.compare_at_price > combo_product.price %}
+                      <span class="purelane-combo-card__sale-price">
+                        {{ combo_product.price | money }}
+                      </span>
+
+                      <span class="purelane-combo-card__compare-price">
+                        {{ combo_product.compare_at_price | money }}
+                      </span>
+                    {% else %}
+                      <span>
+                        {{ combo_product.price | money }}
+                      </span>
+                    {% endif %}
+                  </div>
+                {% endif %}
+
+                {% if combo_product != blank %}
+                  <a
+                    class="purelane-combo-card__button"
+                    href="{{ combo_product.url }}"
+                  >
+                    {{ section.settings.button_label }}
+                    <span aria-hidden="true">→</span>
+                  </a>
+                {% endif %}
+
+              </div>
+            </div>
+
+          </article>
+        {% endfor %}
+
+      </div>
+    {% else %}
+      <div class="purelane-combos__empty">
+        Add combo products using the Theme Editor.
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+  #purelane-combos-{{ section.id }} {
+    --combo-ink: #17102b;
+    --combo-muted: #716987;
+    --combo-paper: #f7f4fb;
+    --combo-white: #ffffff;
+    --combo-brand: #4b3a8f;
+    --combo-accent: #f0a03c;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Purelane Combos",
+  "tag": "section",
+  "class": "section-purelane-combos",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "BEST-SELLING COMBOS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Better together."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Pair your Purelane essentials and save on everyday cleaning.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shop_all",
+      "label": "Show shop all link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "shop_all_label",
+      "label": "Shop all label",
+      "default": "SHOP ALL"
+    },
+    {
+      "type": "url",
+      "id": "shop_all_link",
+      "label": "Shop all link"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Product button label",
+      "default": "SHOP COMBO"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "combo",
+      "name": "Combo",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "combo_label",
+          "label": "Combo label",
+          "default": "BEST SELLER"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "A simple everyday cleaning essential."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Combos",
+      "blocks": [
+        {
+          "type": "combo"
+        },
+        {
+          "type": "combo"
+        },
+        {
+          "type": "combo"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6
+}
+{% endschema %}

@@ -1,0 +1,240 @@
+<section class="purelane-reviews" id="reviews-{{ section.id }}">
+  <div class="purelane-reviews__inner">
+
+    <div class="purelane-reviews__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="purelane-reviews__eyebrow">
+          {{ section.settings.eyebrow }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="purelane-reviews__heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="purelane-reviews__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="purelane-reviews__rail">
+      {% for block in section.blocks %}
+        <article
+          class="purelane-review"
+          {{ block.shopify_attributes }}
+        >
+          <div class="purelane-review__stars" aria-label="{{ block.settings.rating }} out of 5 stars">
+            {% for i in (1..5) %}
+              {% if i <= block.settings.rating %}
+                <span aria-hidden="true">★</span>
+              {% else %}
+                <span aria-hidden="true">☆</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          {% if block.settings.review != blank %}
+            <blockquote class="purelane-review__text">
+              “{{ block.settings.review }}”
+            </blockquote>
+          {% endif %}
+
+          <div class="purelane-review__author">
+            {% if block.settings.name != blank %}
+              <strong>{{ block.settings.name }}</strong>
+            {% endif %}
+
+            {% if block.settings.verified %}
+              <span>Verified buyer</span>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  #reviews-{{ section.id }} {
+    background: #17102b;
+    color: #f8f5ff;
+    padding: 80px 24px;
+  }
+
+  #reviews-{{ section.id }} .purelane-reviews__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  #reviews-{{ section.id }} .purelane-reviews__header {
+    max-width: 700px;
+    margin-bottom: 40px;
+  }
+
+  #reviews-{{ section.id }} .purelane-reviews__eyebrow {
+    margin: 0 0 12px;
+    color: #f0a03c;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  #reviews-{{ section.id }} .purelane-reviews__heading {
+    margin: 0;
+    color: #f8f5ff;
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: .95;
+    letter-spacing: -.04em;
+  }
+
+  #reviews-{{ section.id }} .purelane-reviews__description {
+    margin-top: 18px;
+    color: #c9c2d8;
+    line-height: 1.6;
+  }
+
+  #reviews-{{ section.id }} .purelane-reviews__rail {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  #reviews-{{ section.id }} .purelane-review {
+    min-height: 260px;
+    padding: 30px;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 24px;
+    background: rgba(255,255,255,.07);
+  }
+
+  #reviews-{{ section.id }} .purelane-review__stars {
+    color: #f0a03c;
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+
+  #reviews-{{ section.id }} .purelane-review__text {
+    margin: 28px 0;
+    color: #f8f5ff;
+    font-size: 20px;
+    line-height: 1.45;
+  }
+
+  #reviews-{{ section.id }} .purelane-review__author {
+    display: flex;
+    color: #f8f5ff;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  #reviews-{{ section.id }} .purelane-review__author span {
+    color: #aaa2bd;
+    font-size: 13px;
+  }
+
+  @media screen and (max-width: 749px) {
+    #reviews-{{ section.id }} {
+      padding: 56px 18px;
+    }
+
+    #reviews-{{ section.id }} .purelane-reviews__rail {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #reviews-{{ section.id }} *,
+    #reviews-{{ section.id }} *::before,
+    #reviews-{{ section.id }} *::after {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Purelane Reviews",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Loved by conscious homes"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Good for your home. Loved by your family."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Real feedback from people making everyday cleaning a little better.</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "review",
+          "label": "Review",
+          "default": "The products clean beautifully without the harsh smell."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer name",
+          "default": "Aarav"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Verified buyer",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Reviews",
+      "blocks": [
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8
+}
+{% endschema %}

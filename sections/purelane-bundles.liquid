@@ -1,0 +1,323 @@
+<section class="purelane-bundles" id="bundles-{{ section.id }}">
+  <div class="purelane-bundles__inner">
+
+    <div class="purelane-bundles__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="purelane-bundles__eyebrow">
+          {{ section.settings.eyebrow }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="purelane-bundles__heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="purelane-bundles__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="purelane-bundles__grid">
+      {% for block in section.blocks %}
+        {% assign product = block.settings.product %}
+
+        {% if product != blank %}
+          <article class="purelane-bundle" {{ block.shopify_attributes }}>
+
+            <a
+              href="{{ product.url }}"
+              class="purelane-bundle__image"
+              aria-label="{{ product.title | escape }}"
+            >
+              {% if product.featured_image %}
+                {{
+                  product.featured_image
+                  | image_url: width: 900
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '360, 540, 720, 900',
+                    sizes: '(min-width: 990px) 33vw, 90vw',
+                    alt: product.featured_image.alt | default: product.title
+                }}
+              {% else %}
+                <div class="purelane-bundle__placeholder">
+                  No image
+                </div>
+              {% endif %}
+            </a>
+
+            <div class="purelane-bundle__content">
+
+              {% if block.settings.label != blank %}
+                <span class="purelane-bundle__label">
+                  {{ block.settings.label }}
+                </span>
+              {% endif %}
+
+              <h3 class="purelane-bundle__title">
+                <a href="{{ product.url }}">
+                  {{ product.title }}
+                </a>
+              </h3>
+
+              {% if block.settings.description != blank %}
+                <p class="purelane-bundle__description">
+                  {{ block.settings.description }}
+                </p>
+              {% endif %}
+
+              <div class="purelane-bundle__bottom">
+                <span class="purelane-bundle__price">
+                  {{ product.price | money }}
+                </span>
+
+                <a
+                  href="{{ product.url }}"
+                  class="purelane-bundle__button"
+                >
+                  {{ block.settings.button_label }}
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+
+            </div>
+          </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  #bundles-{{ section.id }} {
+    background: #ece6f7;
+    color: #17102b;
+    padding: 80px 24px;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundles__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundles__header {
+    max-width: 720px;
+    margin-bottom: 40px;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundles__eyebrow {
+    margin: 0 0 10px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #4b3a8f;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundles__heading {
+    margin: 0;
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: .95;
+    letter-spacing: -.04em;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundles__description {
+    margin-top: 18px;
+    color: #514a63;
+    line-height: 1.6;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundles__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundle {
+    overflow: hidden;
+    background: #fff;
+    border-radius: 24px;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundle__image {
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #f5f2f8;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundle__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundle__placeholder {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    color: #777;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundle__content {
+    padding: 24px;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundle__label {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #4b3a8f;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundle__title {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.15;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundle__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundle__description {
+    margin: 12px 0 20px;
+    color: #625b72;
+    line-height: 1.5;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundle__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundle__price {
+    font-weight: 700;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundle__button {
+    color: #17102b;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  #bundles-{{ section.id }} .purelane-bundle__button:focus-visible,
+  #bundles-{{ section.id }} a:focus-visible {
+    outline: 3px solid #f0a03c;
+    outline-offset: 4px;
+  }
+
+  @media screen and (max-width: 749px) {
+    #bundles-{{ section.id }} {
+      padding: 56px 18px;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundles__grid {
+      grid-template-columns: 1fr;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle__bottom {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #bundles-{{ section.id }} *,
+    #bundles-{{ section.id }} *::before,
+    #bundles-{{ section.id }} *::after {
+      scroll-behavior: auto !important;
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Purelane Bundles",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Build your bundle"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Better together."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Pair your Purelane essentials and save on everyday cleaning.</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "bundle",
+      "name": "Bundle",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Bundle label",
+          "default": "SAVE MORE"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "A simple combination for everyday cleaning."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Shop bundle"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Bundles",
+      "blocks": [
+        {
+          "type": "bundle"
+        },
+        {
+          "type": "bundle"
+        },
+        {
+          "type": "bundle"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6
+}
+{% endschema %}

@@ -1,0 +1,383 @@
+/* =========================================================
+   PURELANE DESIGN SYSTEM
+   ========================================================= */
+
+:root {
+  --purelane-ink: #17102b;
+  --purelane-deep: #241a3d;
+  --purelane-brand: #4b3a8f;
+  --purelane-brand-light: #6b55b8;
+  --purelane-paper: #ece6f7;
+  --purelane-paper-soft: rgba(236, 230, 247, 0.74);
+  --purelane-paper-muted: rgba(236, 230, 247, 0.52);
+  --purelane-accent: #f0a03c;
+  --purelane-accent-dark: #c9761d;
+  --purelane-surface: #faf7fd;
+
+  --purelane-glass:
+    linear-gradient(
+      158deg,
+      rgba(236, 230, 247, 0.15),
+      rgba(75, 58, 143, 0.20) 58%,
+      rgba(23, 16, 43, 0.28)
+    );
+
+  --purelane-glass-border: rgba(236, 230, 247, 0.22);
+
+  --purelane-shadow:
+    0 26px 74px rgba(18, 12, 34, 0.44);
+
+  --purelane-radius: 26px;
+  --purelane-radius-small: 16px;
+  --purelane-max-width: 1180px;
+
+  --purelane-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* ---------- Base ---------- */
+
+.purelane-section {
+  position: relative;
+  overflow: clip;
+  color: var(--purelane-paper);
+  background: var(--purelane-ink);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.purelane-section *,
+.purelane-section *::before,
+.purelane-section *::after {
+  box-sizing: border-box;
+}
+
+.purelane-section a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.purelane-section img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ---------- Container ---------- */
+
+.purelane-container {
+  width: min(100% - 36px, var(--purelane-max-width));
+  margin-inline: auto;
+}
+
+/* ---------- Typography ---------- */
+
+.purelane-display {
+  margin: 0;
+  color: var(--purelane-surface);
+  font-family: Outfit, Inter, system-ui, sans-serif;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.018em;
+  text-transform: uppercase;
+}
+
+.purelane-display--hero {
+  font-size: clamp(48px, 8.6vw, 112px);
+}
+
+.purelane-eyebrow {
+  margin: 0 0 12px;
+  color: var(--purelane-paper-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.purelane-text {
+  color: var(--purelane-paper-soft);
+  font-size: clamp(15px, 1.35vw, 17.5px);
+  line-height: 1.6;
+}
+
+/* ---------- Glass ---------- */
+
+.purelane-glass {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--purelane-glass-border);
+  border-radius: var(--purelane-radius);
+  background: var(--purelane-glass);
+  box-shadow:
+    var(--purelane-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+}
+
+.purelane-glass::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0.16),
+      transparent 30%,
+      transparent 72%,
+      rgba(240, 160, 60, 0.07)
+    );
+  content: "";
+  pointer-events: none;
+}
+
+/* ---------- Buttons ---------- */
+
+.purelane-button {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 0 22px;
+
+  border: 0;
+  border-radius: 999px;
+
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  line-height: 1;
+  text-transform: uppercase;
+
+  transition:
+    transform 0.35s var(--purelane-ease),
+    background-color 0.35s var(--purelane-ease),
+    box-shadow 0.35s var(--purelane-ease);
+}
+
+.purelane-button:hover {
+  transform: translateY(-2px);
+}
+
+.purelane-button:focus-visible {
+  outline: 2px solid var(--purelane-accent);
+  outline-offset: 4px;
+}
+
+.purelane-button--primary {
+  color: #08211a;
+  background:
+    linear-gradient(
+      135deg,
+      var(--purelane-accent-dark),
+      #5d8d1c
+    );
+
+  box-shadow:
+    0 12px 30px rgba(201, 118, 29, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34);
+}
+
+.purelane-button--secondary {
+  border: 1px solid rgba(236, 230, 247, 0.3);
+  color: var(--purelane-surface);
+  background: rgba(236, 230, 247, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ---------- Hero ---------- */
+
+.purelane-hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  padding: 150px 0 34px;
+  isolation: isolate;
+}
+
+.purelane-hero__background {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(
+      178deg,
+      #1ea38d 0%,
+      #0b8578 22%,
+      #017069 48%,
+      #4b3a8f 74%,
+      #01524e 100%
+    );
+}
+
+.purelane-hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(
+      102deg,
+      rgba(1, 45, 42, 0.68) 0%,
+      rgba(1, 45, 42, 0.40) 30%,
+      rgba(1, 45, 42, 0.10) 52%,
+      transparent 66%
+    );
+}
+
+.purelane-hero__content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+}
+
+.purelane-hero__title {
+  margin-bottom: 20px;
+  text-shadow: 0 6px 40px rgba(2, 20, 19, 0.55);
+}
+
+.purelane-hero__description {
+  max-width: 44ch;
+}
+
+.purelane-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  margin-top: 26px;
+}
+
+/* ---------- Trust badges ---------- */
+
+.purelane-hero__badges {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.purelane-hero__badge {
+  flex: 1;
+  padding: 11px 6px;
+  border: 1px solid rgba(236, 230, 247, 0.16);
+  border-radius: 14px;
+
+  color: var(--purelane-paper-soft);
+  background: rgba(236, 230, 247, 0.1);
+
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  text-align: center;
+  text-transform: uppercase;
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* ---------- Hero product visual ---------- */
+
+.purelane-hero__product {
+  position: absolute;
+  right: 2%;
+  bottom: 28px;
+  z-index: 2;
+
+  width: min(50vw, 560px);
+
+  filter: drop-shadow(
+    0 34px 54px rgba(2, 20, 19, 0.6)
+  );
+}
+
+.purelane-hero__product-card {
+  position: absolute;
+  right: 8%;
+  bottom: 8%;
+  min-width: 180px;
+  padding: 16px;
+  border-radius: 18px;
+}
+
+.purelane-hero__product-image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .purelane-hero {
+    align-items: flex-end;
+    padding-top: 132px;
+  }
+
+  .purelane-hero__overlay {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(1, 45, 42, 0.44) 0%,
+        rgba(1, 45, 42, 0.22) 34%,
+        rgba(1, 40, 38, 0.60) 100%
+      );
+  }
+
+  .purelane-hero__content {
+    max-width: none;
+  }
+
+  .purelane-hero__product {
+    position: relative;
+    right: auto;
+    bottom: auto;
+
+    width: min(88vw, 420px);
+    margin: 20px auto 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .purelane-container {
+    width: min(100% - 28px, var(--purelane-max-width));
+  }
+
+  .purelane-hero {
+    padding-top: 118px;
+    padding-bottom: 24px;
+  }
+
+  .purelane-display--hero {
+    font-size: clamp(46px, 15vw, 70px);
+  }
+
+  .purelane-hero__actions {
+    flex-direction: column;
+  }
+
+  .purelane-button {
+    width: 100%;
+  }
+
+  .purelane-hero__product-card {
+    right: 2%;
+    min-width: 155px;
+    padding: 12px;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .purelane-section *,
+  .purelane-section *::before,
+  .purelane-section *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

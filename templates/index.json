@@ -86,14 +86,82 @@
     },
     "purelane_bundles": {
       "type": "purelane-bundles",
+      "blocks": {
+        "bundle_FzQpgg": {
+          "type": "bundle",
+          "settings": {
+            "product": "laundry-detergent",
+            "label": "HOME FAVORITE",
+            "description": "Plant-powered essentials made for everyday home care.",
+            "button_label": "Shop bundle"
+          }
+        },
+        "bundle_3YkKHK": {
+          "type": "bundle",
+          "settings": {
+            "product": "organic-dishwash-gel",
+            "label": "EVERYDAY ESSENTIALS",
+            "description": "Keep your everyday cleaning routine simple and effective.",
+            "button_label": "Shop bundle"
+          }
+        },
+        "bundle_qRtTBg": {
+          "type": "bundle",
+          "settings": {
+            "product": "non-toxic-toilet-cleaner",
+            "label": "SAVE MORE",
+            "description": "A simple combination for everyday cleaning.",
+            "button_label": "Shop bundle"
+          }
+        }
+      },
+      "block_order": [
+        "bundle_FzQpgg",
+        "bundle_3YkKHK",
+        "bundle_qRtTBg"
+      ],
       "settings": {
-        "eyebrow": "Build your bundle",
-        "heading": "Better together.",
-        "description": "<p>Pair your Purelane essentials and save on everyday cleaning.</p>"
+        "eyebrow": "BUNDLES",
+        "heading": "Bundles that save more.",
+        "description": "<p>Stock up on plant-powered essentials and save on your everyday routine.</p>"
       }
     },
     "purelane_reviews": {
       "type": "purelane-reviews",
+      "blocks": {
+        "review_paJdBj": {
+          "type": "review",
+          "settings": {
+            "review": "The floor cleaner smells fresh without the harsh chemical smell.",
+            "name": "Riya",
+            "rating": 5,
+            "verified": false
+          }
+        },
+        "review_CkBtnV": {
+          "type": "review",
+          "settings": {
+            "review": "Finally a cleaner that feels good to use every day.",
+            "name": "Ananya",
+            "rating": 5,
+            "verified": false
+          }
+        },
+        "review_VWfaVP": {
+          "type": "review",
+          "settings": {
+            "review": "The products clean beautifully without the harsh smell.",
+            "name": "Aarav",
+            "rating": 5,
+            "verified": false
+          }
+        }
+      },
+      "block_order": [
+        "review_paJdBj",
+        "review_CkBtnV",
+        "review_VWfaVP"
+      ],
       "settings": {
         "eyebrow": "Loved by conscious homes",
         "heading": "Good for your home. Loved by your family.",

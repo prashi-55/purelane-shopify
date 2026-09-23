@@ -1,5 +1,7 @@
 # Purelane – Metafield / Metaobject Definitions
 
+> **Implementation status:** No custom metafields or metaobjects were created for the final assignment implementation. The required sections use Shopify's native product/collection data and section settings/blocks. The Review metaobject described below is a proposed production data model for a future iteration if reviews need to be reused across multiple surfaces.
+
 ## Current Implementation
 
 The required homepage sections use Shopify's native section settings and blocks for merchant-editable content.

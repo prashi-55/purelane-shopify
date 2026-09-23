@@ -190,3 +190,39 @@ AI was used as a development accelerator and review aid while keeping the implem
 - Performance
 - Maintainability
 - Visual fidelity
+
+---
+
+## Where AI Assistance Was Not Sufficient
+
+AI assistance was useful for planning, implementation support, debugging, and review, but it was not treated as the source of truth.
+
+The main limitations were:
+
+- Visual fidelity required manual comparison against the supplied prototype.
+- Shopify Theme Editor behavior had to be tested in the actual development store.
+- Shopify-specific Liquid behavior could not be assumed to be correct from generic code suggestions.
+- Theme Check was required to validate the theme implementation.
+- Real product data was required to verify sold-out, missing-image, and long-title edge cases.
+- Responsive behavior and accessibility states required browser-level testing.
+
+The final implementation was therefore validated against the actual Shopify development environment rather than relying only on AI-generated suggestions.
+
+---
+
+## What I Would Systematise for 20 Similar Builds
+
+For repeated Shopify builds, I would standardise the workflow around:
+
+1. Prototype-to-section mapping before implementation.
+2. A reusable Shopify section scaffold.
+3. A standard merchant-editability checklist.
+4. A standard accessibility checklist covering keyboard, focus, contrast, and reduced motion.
+5. Automated Shopify Theme Check validation.
+6. Standard product edge-case fixtures for sold-out, missing-image, and long-title products.
+7. Responsive visual QA at defined breakpoints.
+8. Performance checks for image loading and unnecessary JavaScript.
+9. AI-assisted implementation and code review followed by real-store validation.
+10. A final deployment checklist covering Git history, store access, documentation, and QA.
+
+The goal would be to use AI for repeatable implementation and review work while keeping visual QA, Shopify validation, and final production decisions under direct engineering control.

@@ -18,10 +18,40 @@
       }
     },
 
-    "purelane_combos": {
-      "type": "purelane-combos"
+"purelane_combos": {
+  "type": "purelane-combos",
+  "blocks": {
+    "combo_1": {
+      "type": "combo",
+      "settings": {
+        "product": "",
+        "combo_label": "BEST SELLER",
+        "description": "A simple everyday cleaning essential."
+      }
     },
-
+    "combo_2": {
+      "type": "combo",
+      "settings": {
+        "product": "",
+        "combo_label": "EVERYDAY PAIR",
+        "description": "Pair two essentials for everyday cleaning."
+      }
+    },
+    "combo_3": {
+      "type": "combo",
+      "settings": {
+        "product": "",
+        "combo_label": "CLEANING FAVORITE",
+        "description": "A practical combination for your home."
+      }
+    }
+  },
+  "block_order": [
+    "combo_1",
+    "combo_2",
+    "combo_3"
+  ]
+},
     "purelane_bundles": {
       "type": "purelane-bundles"
     },

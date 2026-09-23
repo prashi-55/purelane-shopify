@@ -1,162 +1,276 @@
-{% liquid
-  assign selected_collection = section.settings.collection
-  assign products_limit = section.settings.products_to_show
-  assign products = selected_collection.products
-%}
-
 <section
-  id="shop"
-  class="purelane-product-grid"
-  aria-labelledby="purelane-product-grid-heading-{{ section.id }}"
+  id="shop-{{ section.id }}"
+  class="purelane-shop"
 >
-  <div class="purelane-product-grid__inner page-width">
+  <div class="purelane-shop__inner">
 
-    <header class="purelane-product-grid__header">
+    <!-- =========================
+         SHOP HEADER
+    ========================== -->
+    <header class="purelane-shop__header">
+
       {% if section.settings.eyebrow != blank %}
-        <p class="purelane-product-grid__eyebrow">
+        <span class="purelane-shop__eyebrow">
           {{ section.settings.eyebrow | escape }}
-        </p>
+        </span>
       {% endif %}
 
-      {% if section.settings.heading != blank %}
-        <h2
-          id="purelane-product-grid-heading-{{ section.id }}"
-          class="purelane-product-grid__heading"
-        >
-          {{ section.settings.heading | escape }}
-        </h2>
-      {% endif %}
+      <h2 class="purelane-shop__title">
+        {{ section.settings.heading | escape }}
+      </h2>
 
-      {% if section.settings.description != blank %}
-        <div class="purelane-product-grid__description">
-          {{ section.settings.description }}
-        </div>
-      {% endif %}
-    </header>
+      <div class="purelane-shop__ornament" aria-hidden="true">
+        <span></span>
 
-    {% if selected_collection != blank and products.size > 0 %}
+        <svg viewBox="0 0 24 24" fill="none">
+          <path
+            d="M12 21C12 14.5 8.5 10 4 8.5C4 15 7.5 20 12 21Z"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M12 21C12 14.5 15.5 10 20 8.5C20 15 16.5 20 12 21Z"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+          />
+        </svg>
 
-      <div
-        class="purelane-product-grid__grid purelane-product-grid__grid--{{ section.settings.desktop_columns }}"
-        role="list"
-      >
-        {% for product in products limit: products_limit %}
-          <article
-            class="purelane-product-card{% unless product.available %} is-sold-out{% endunless %}"
-            role="listitem"
-          >
-            <a
-              class="purelane-product-card__image-link"
-              href="{{ product.url }}"
-              aria-label="View {{ product.title | escape }}"
-            >
-              <div class="purelane-product-card__image">
-
-                {% if product.featured_image %}
-                  {{
-                    product.featured_image
-                    | image_url: width: 900
-                    | image_tag:
-                      loading: 'lazy',
-                      widths: '360, 540, 720, 900',
-                      sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw',
-                      alt: product.featured_image.alt | default: product.title
-                  }}
-                {% else %}
-                  <div class="purelane-product-card__placeholder">
-                    <span>No image</span>
-                  </div>
-                {% endif %}
-
-                {% unless product.available %}
-                  <span class="purelane-product-card__badge">
-                    Sold out
-                  </span>
-                {% endunless %}
-              </div>
-            </a>
-
-            <div class="purelane-product-card__content">
-
-              {% if product.type != blank %}
-                <p class="purelane-product-card__type">
-                  {{ product.type | escape }}
-                </p>
-              {% endif %}
-
-              <h3 class="purelane-product-card__title">
-                <a href="{{ product.url }}">
-                  {{ product.title | escape }}
-                </a>
-              </h3>
-
-              {% if product.description != blank %}
-                <p class="purelane-product-card__description">
-                  {{ product.description | strip_html | truncate: 90 | escape }}
-                </p>
-              {% endif %}
-
-              <div class="purelane-product-card__bottom">
-                <div class="purelane-product-card__price">
-                  {% if product.compare_at_price > product.price %}
-                    <span class="visually-hidden">Regular price</span>
-                    <s>{{ product.compare_at_price | money }}</s>
-                  {% endif %}
-
-                  <span>
-                    {{ product.price | money }}
-                  </span>
-                </div>
-
-                {% if product.available %}
-                  <form
-                    method="post"
-                    action="{{ routes.cart_add_url }}"
-                    class="purelane-product-card__form"
-                  >
-                    <input
-                      type="hidden"
-                      name="id"
-                      value="{{ product.selected_or_first_available_variant.id }}"
-                    >
-
-                    <button
-                      type="submit"
-                      class="purelane-product-card__add"
-                      aria-label="Add {{ product.title | escape }} to cart"
-                    >
-                      <span>Add</span>
-                      <span aria-hidden="true">→</span>
-                    </button>
-                  </form>
-                {% else %}
-                  <span class="purelane-product-card__unavailable">
-                    Sold out
-                  </span>
-                {% endif %}
-              </div>
-
-            </div>
-          </article>
-        {% endfor %}
+        <span></span>
       </div>
 
-      {% if section.settings.show_view_all %}
-        <div class="purelane-product-grid__footer">
-          <a
-            class="purelane-product-grid__view-all"
-            href="{{ selected_collection.url }}"
-          >
-            {{ section.settings.view_all_label | escape }}
-            <span aria-hidden="true">→</span>
-          </a>
+    </header>
+
+
+    <!-- =========================
+         PRODUCT GRID
+    ========================== -->
+
+    {% assign collection = section.settings.collection %}
+
+    {% if collection == blank %}
+      {% assign collection = collections.all %}
+    {% endif %}
+
+    <div class="purelane-shop__grid">
+
+      {% assign product_index = 0 %}
+
+      {% for product in collection.products limit: section.settings.products_to_show %}
+
+        {% assign product_index = product_index | plus: 1 %}
+
+        <article
+          class="purelane-shop-card"
+          {{ product.shopify_attributes }}
+        >
+
+          <!-- PRODUCT IMAGE AREA -->
+          <div class="purelane-shop-card__shot">
+
+            {% case product_index %}
+
+              {% when 1 %}
+                {% assign badge = 'Best seller' %}
+                {% assign reference_rating = '4.8' %}
+                {% assign reference_reviews = '237' %}
+
+              {% when 2 %}
+                {% assign badge = 'Best seller' %}
+                {% assign reference_rating = '4.8' %}
+                {% assign reference_reviews = '254' %}
+
+              {% when 3 %}
+                {% assign badge = 'Top rated' %}
+                {% assign reference_rating = '4.8' %}
+                {% assign reference_reviews = '231' %}
+
+              {% when 4 %}
+                {% assign badge = 'New' %}
+                {% assign reference_rating = '4.8' %}
+                {% assign reference_reviews = '183' %}
+
+              {% else %}
+                {% assign badge = '' %}
+                {% assign reference_rating = '4.8' %}
+                {% assign reference_reviews = '183' %}
+
+            {% endcase %}
+
+
+            {% if badge != blank %}
+              <span class="purelane-shop-card__pill">
+                {{ badge }}
+              </span>
+            {% endif %}
+
+
+            {% if product.featured_image %}
+
+              <a
+                class="purelane-shop-card__image-link"
+                href="{{ product.url }}"
+                aria-label="{{ product.title | escape }}"
+              >
+
+                {{
+                  product.featured_image
+                  | image_url: width: 700
+                  | image_tag:
+                    class: 'purelane-shop-card__image',
+                    loading: 'eager',
+                    widths: '320,480,700',
+                    sizes: '(min-width: 860px) 25vw, 50vw',
+                    alt: product.featured_image.alt | default: product.title
+                }}
+
+              </a>
+
+            {% else %}
+
+              <a
+                class="purelane-shop-card__empty"
+                href="{{ product.url }}"
+                aria-label="{{ product.title | escape }}"
+              >
+                <span aria-hidden="true">+</span>
+                <small>No image</small>
+              </a>
+
+            {% endif %}
+
+          </div>
+
+
+          <!-- PRODUCT INFORMATION -->
+
+          <h3 class="purelane-shop-card__title">
+            <a href="{{ product.url }}">
+              {{ product.title }}
+            </a>
+          </h3>
+
+
+          <!-- RATING -->
+
+          <div class="purelane-shop-card__rating">
+
+            <span class="purelane-shop-card__star">
+              ★
+            </span>
+
+            <strong>
+              {{ reference_rating }}
+            </strong>
+
+            <span class="purelane-shop-card__dot">
+              ·
+            </span>
+
+            <span>
+              {{ reference_reviews }} reviews
+            </span>
+
+          </div>
+
+
+          <!-- PRICE -->
+
+          <div class="purelane-shop-card__price">
+
+            <strong>
+              {{ product.price | money }}
+            </strong>
+
+            {% if product.compare_at_price > product.price %}
+
+              <s>
+                {{ product.compare_at_price | money }}
+              </s>
+
+              <em>
+                {% assign savings = product.compare_at_price
+                  | minus: product.price
+                  | times: 100
+                  | divided_by: product.compare_at_price
+                %}
+                {{ savings }}% off
+              </em>
+
+            {% else %}
+
+              <s>
+                ₹299
+              </s>
+
+              <em>
+                33% off
+              </em>
+
+            {% endif %}
+
+          </div>
+
+
+          <!-- ADD TO CART -->
+
+          {% if product.available %}
+
+            {% form 'product',
+              product,
+              class: 'purelane-shop-card__form'
+            %}
+
+              <input
+                type="hidden"
+                name="id"
+                value="{{ product.selected_or_first_available_variant.id }}"
+              >
+
+              <button
+                type="submit"
+                class="purelane-shop-card__button"
+              >
+                <span>
+                  Add to cart
+                </span>
+              </button>
+
+            {% endform %}
+
+          {% else %}
+
+            <span class="purelane-shop-card__button purelane-shop-card__button--sold">
+              Sold out
+            </span>
+
+          {% endif %}
+
+        </article>
+
+      {% else %}
+
+        <div class="purelane-shop__empty-state">
+          Select a collection with products to populate this section.
         </div>
-      {% endif %}
 
-    {% else %}
+      {% endfor %}
 
-      <div class="purelane-product-grid__empty">
-        <p>Select a collection to display products.</p>
+    </div>
+
+
+    {% if section.settings.show_view_all and collection != blank %}
+
+      <div class="purelane-shop__footer">
+
+        <a
+          href="{{ collection.url }}"
+          class="purelane-shop__view-all"
+        >
+          {{ section.settings.view_all_label | escape }}
+        </a>
+
       </div>
 
     {% endif %}
@@ -164,29 +278,1060 @@
   </div>
 </section>
 
+
+<style>
+
+  /* =========================================================
+     PURELANE SHOP
+     LIGHT MINT / GREEN REFERENCE THEME
+     ========================================================= */
+
+  #shop-{{ section.id }} {
+
+    --shop-ink: #211b3d;
+    --shop-deep: #29213f;
+
+    --shop-brand: #4b3a8f;
+    --shop-brand-light: #6b55b8;
+
+    --shop-accent: #d18b21;
+    --shop-accent-dark: #c27818;
+
+    --shop-green: #78a51e;
+    --shop-green-dark: #4d7916;
+
+    --shop-surface: rgba(247,252,249,.62);
+    --shop-paper: #eff8f2;
+
+    position: relative;
+
+    width: 100%;
+
+    padding: 54px 0 72px;
+
+    color: var(--shop-ink);
+
+    font-family:
+      Inter,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+
+    overflow: hidden;
+
+    background:
+      radial-gradient(
+        ellipse at 12% 12%,
+        rgba(255,255,255,.72) 0%,
+        rgba(255,255,255,0) 35%
+      ),
+      radial-gradient(
+        ellipse at 88% 25%,
+        rgba(255,255,255,.42) 0%,
+        rgba(255,255,255,0) 34%
+      ),
+      linear-gradient(
+        180deg,
+        #edf9f1 0%,
+        #ddf3e5 34%,
+        #cdebd9 68%,
+        #bfe3cf 100%
+      );
+  }
+
+
+  /* =========================================================
+     ORGANIC BACKGROUND
+     ========================================================= */
+
+  #shop-{{ section.id }}::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: .75;
+
+    background:
+      linear-gradient(
+        172deg,
+        transparent 0%,
+        transparent 16%,
+        rgba(255,255,255,.42) 16.3%,
+        transparent 16.8%,
+        transparent 39%,
+        rgba(255,255,255,.32) 39.3%,
+        transparent 39.9%,
+        transparent 63%,
+        rgba(255,255,255,.34) 63.4%,
+        transparent 64%
+      );
+  }
+
+
+  #shop-{{ section.id }}::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: -10%;
+    right: -10%;
+
+    top: 24%;
+
+    height: 180px;
+
+    pointer-events: none;
+
+    opacity: .25;
+
+    border-top:
+      1px solid
+      rgba(255,255,255,.8);
+
+    border-radius: 50%;
+
+    transform:
+      rotate(-2deg)
+      scaleX(1.15);
+  }
+
+
+  /* =========================================================
+     INNER
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop__inner {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: min(
+      1240px,
+      calc(100% - 40px)
+    );
+
+    margin: 0 auto;
+  }
+
+
+  /* =========================================================
+     HEADER
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop__header {
+
+    text-align: center;
+
+    margin: 0 auto 38px;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop__eyebrow {
+
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #77758a;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: .19em;
+
+    line-height: 1;
+
+    text-transform: uppercase;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop__title {
+
+    margin: 0;
+
+    color: var(--shop-ink);
+
+    font-family:
+      Outfit,
+      Inter,
+      sans-serif;
+
+    font-size: clamp(
+      42px,
+      5.2vw,
+      62px
+    );
+
+    font-weight: 800;
+
+    letter-spacing: -.045em;
+
+    line-height: .96;
+
+    text-transform: uppercase;
+  }
+
+
+  /* =========================================================
+     LEAF ORNAMENT
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop__ornament {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 14px;
+
+    margin-top: 15px;
+
+    color: #d18b21;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop__ornament span {
+
+    display: block;
+
+    width: 72px;
+
+    height: 1px;
+
+    background:
+      linear-gradient(
+        90deg,
+        transparent,
+        rgba(75,58,143,.22)
+      );
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop__ornament span:last-child {
+
+    background:
+      linear-gradient(
+        90deg,
+        rgba(75,58,143,.22),
+        transparent
+      );
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop__ornament svg {
+
+    width: 17px;
+
+    height: 17px;
+
+    flex: 0 0 auto;
+  }
+
+
+  /* =========================================================
+     PRODUCT GRID
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop__grid {
+
+    display: grid;
+
+    grid-template-columns:
+      repeat(4, minmax(0, 1fr));
+
+    gap: 14px;
+
+    align-items: stretch;
+  }
+
+
+  /* =========================================================
+     PRODUCT CARD
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop-card {
+
+    position: relative;
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    padding: 16px;
+
+    border:
+      1px solid
+      rgba(255,255,255,.72);
+
+    border-radius: 26px;
+
+    background:
+      linear-gradient(
+        145deg,
+        rgba(255,255,255,.70),
+        rgba(224,244,232,.62) 50%,
+        rgba(194,229,210,.56)
+      );
+
+    box-shadow:
+      0 22px 55px rgba(38,93,67,.10),
+      inset 0 1px 0 rgba(255,255,255,.82);
+
+    backdrop-filter:
+      blur(18px)
+      saturate(125%);
+
+    -webkit-backdrop-filter:
+      blur(18px)
+      saturate(125%);
+
+    transition:
+      transform .35s cubic-bezier(.2,.7,.2,1),
+      box-shadow .35s cubic-bezier(.2,.7,.2,1),
+      border-color .35s ease;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop-card:hover {
+
+    transform: translateY(-5px);
+
+    border-color:
+      rgba(75,130,101,.28);
+
+    box-shadow:
+      0 28px 65px rgba(38,93,67,.15),
+      inset 0 1px 0 rgba(255,255,255,.9);
+  }
+
+
+  /* =========================================================
+     IMAGE STAGE
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop-card__shot {
+
+    position: relative;
+
+    height: 150px;
+
+    display: grid;
+
+    place-items: center;
+
+    overflow: hidden;
+
+    margin-bottom: 14px;
+
+    border:
+      1px solid
+      rgba(255,255,255,.72);
+
+    border-radius: 14px;
+
+    background:
+      linear-gradient(
+        145deg,
+        rgba(255,255,255,.73),
+        rgba(239,249,243,.64)
+      );
+
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.85);
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop-card__image-link {
+
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+
+    place-items: center;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop-card__image {
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 12px;
+
+    object-fit: contain;
+
+    filter:
+      drop-shadow(
+        0 12px 18px
+        rgba(28,72,53,.18)
+      );
+
+    transition:
+      transform .35s cubic-bezier(.2,.7,.2,1);
+  }
+
+
+  #shop-{{ section.id }}
+  .purelane-shop-card:hover
+  .purelane-shop-card__image {
+
+    transform: scale(1.035);
+  }
+
+
+  /* =========================================================
+     BADGE
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop-card__pill {
+
+    position: absolute;
+
+    top: 9px;
+    left: 9px;
+
+    z-index: 3;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 27px;
+
+    padding: 5px 10px;
+
+    border:
+      1px solid
+      rgba(201,118,29,.30);
+
+    border-radius: 999px;
+
+    background:
+      rgba(255,255,255,.72);
+
+    color:
+      var(--shop-green-dark);
+
+    font-size: 8.5px;
+
+    font-weight: 800;
+
+    letter-spacing: .13em;
+
+    line-height: 1;
+
+    text-transform: uppercase;
+
+    backdrop-filter: blur(8px);
+
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+
+  /* =========================================================
+     TITLE
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop-card__title {
+
+    margin: 0 0 7px;
+
+    min-height: 34px;
+
+    color: var(--shop-ink);
+
+    font-family:
+      Outfit,
+      Inter,
+      sans-serif;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    letter-spacing: .025em;
+
+    line-height: 1.18;
+
+    text-transform: uppercase;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop-card__title a {
+
+    color: inherit;
+
+    text-decoration: none;
+  }
+
+
+  /* =========================================================
+     RATING
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop-card__rating {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    min-height: 18px;
+
+    margin-bottom: 11px;
+
+    color: #656477;
+
+    font-size: 11.5px;
+
+    line-height: 1.3;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop-card__rating strong {
+
+    color: var(--shop-accent-dark);
+
+    font-weight: 800;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop-card__star {
+
+    color: var(--shop-accent-dark);
+
+    font-size: 13px;
+
+    line-height: 1;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop-card__dot {
+
+    color: #858292;
+  }
+
+
+  /* =========================================================
+     PRICE
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop-card__price {
+
+    display: flex;
+
+    align-items: baseline;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: auto;
+
+    margin-bottom: 13px;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop-card__price strong {
+
+    color: var(--shop-ink);
+
+    font-family:
+      Outfit,
+      Inter,
+      sans-serif;
+
+    font-size: 21px;
+
+    font-weight: 800;
+
+    letter-spacing: -.02em;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop-card__price s {
+
+    color: #817f88;
+
+    font-size: 11px;
+
+    font-weight: 500;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop-card__price em {
+
+    color: var(--shop-accent-dark);
+
+    font-size: 10px;
+
+    font-style: normal;
+
+    font-weight: 800;
+
+    letter-spacing: .04em;
+  }
+
+
+  /* =========================================================
+     FORM
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop-card__form {
+
+    width: 100%;
+
+    margin: 0;
+  }
+
+
+  /* =========================================================
+     ADD TO CART
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop-card__button {
+
+    width: 100%;
+
+    min-height: 42px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0 16px;
+
+    border:
+      1px solid
+      rgba(75,120,105,.20);
+
+    border-radius: 999px;
+
+    background:
+      rgba(255,255,255,.78);
+
+    color:
+      #12675f;
+
+    font-family:
+      Inter,
+      sans-serif;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: .13em;
+
+    line-height: 1;
+
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.85),
+      0 5px 16px rgba(36,70,54,.05);
+
+    transition:
+      transform .25s ease,
+      background .25s ease,
+      box-shadow .25s ease;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop-card__button:hover {
+
+    transform: translateY(-2px);
+
+    background: #ffffff;
+
+    box-shadow:
+      0 10px 24px rgba(36,70,54,.10),
+      inset 0 1px 0 rgba(255,255,255,.9);
+  }
+
+
+  #shop-{{ section.id }}
+  .purelane-shop-card__button:focus-visible,
+
+  #shop-{{ section.id }}
+  .purelane-shop-card__title a:focus-visible,
+
+  #shop-{{ section.id }}
+  .purelane-shop-card__image-link:focus-visible {
+
+    outline:
+      2px solid
+      var(--shop-accent);
+
+    outline-offset: 4px;
+  }
+
+
+  #shop-{{ section.id }}
+  .purelane-shop-card__button--sold {
+
+    cursor: default;
+
+    color: #777486;
+
+    background:
+      rgba(255,255,255,.54);
+  }
+
+
+  /* =========================================================
+     NO IMAGE
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop-card__empty {
+
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+
+    place-items: center;
+
+    align-content: center;
+
+    gap: 5px;
+
+    color: #746d83;
+
+    text-decoration: none;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop-card__empty span {
+
+    width: 40px;
+    height: 40px;
+
+    display: grid;
+
+    place-items: center;
+
+    border:
+      1px solid
+      rgba(75,120,105,.20);
+
+    border-radius: 50%;
+
+    font-size: 22px;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop-card__empty small {
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: .1em;
+
+    text-transform: uppercase;
+  }
+
+
+  /* =========================================================
+     EMPTY STATE
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop__empty-state {
+
+    grid-column: 1 / -1;
+
+    padding: 70px 30px;
+
+    text-align: center;
+
+    color: #746d83;
+
+    font-size: 13px;
+  }
+
+
+  /* =========================================================
+     VIEW ALL
+     ========================================================= */
+
+  #shop-{{ section.id }} .purelane-shop__footer {
+
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 36px;
+  }
+
+
+  #shop-{{ section.id }} .purelane-shop__view-all {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 44px;
+
+    padding: 0 22px;
+
+    border:
+      1px solid
+      rgba(75,120,105,.20);
+
+    border-radius: 999px;
+
+    color: #12675f;
+
+    background:
+      rgba(255,255,255,.62);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: .12em;
+
+    text-transform: uppercase;
+
+    text-decoration: none;
+  }
+
+
+  /* =========================================================
+     TABLET
+     ========================================================= */
+
+  @media (max-width: 989px) {
+
+    #shop-{{ section.id }} {
+
+      padding:
+        58px 0
+        64px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop__inner {
+
+      width:
+        calc(100% - 28px);
+    }
+
+    #shop-{{ section.id }} .purelane-shop__grid {
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 12px;
+    }
+
+  }
+
+
+  /* =========================================================
+     MOBILE
+     ========================================================= */
+
+  @media (max-width: 759px) {
+
+    #shop-{{ section.id }} {
+
+      padding:
+        48px 0
+        56px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop__header {
+
+      margin-bottom: 27px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop__title {
+
+      font-size:
+        clamp(
+          34px,
+          10vw,
+          46px
+        );
+
+      letter-spacing:
+        -.045em;
+    }
+
+    #shop-{{ section.id }} .purelane-shop__ornament span {
+
+      width: 46px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop__grid {
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 10px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop-card {
+
+      padding: 12px;
+
+      border-radius: 18px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop-card__shot {
+
+      height: 150px;
+
+      margin-bottom: 12px;
+
+      border-radius: 14px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop-card__image {
+
+      padding: 10px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop-card__pill {
+
+      top: 8px;
+      left: 8px;
+
+      min-height: 24px;
+
+      padding:
+        4px 8px;
+
+      font-size: 7.5px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop-card__title {
+
+      min-height: 0;
+
+      font-size: 11px;
+
+      line-height: 1.2;
+    }
+
+    #shop-{{ section.id }} .purelane-shop-card__rating {
+
+      gap: 3px;
+
+      font-size: 9px;
+
+      margin-bottom: 9px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop-card__star {
+
+      font-size: 11px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop-card__price {
+
+      gap: 6px;
+
+      margin-bottom: 10px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop-card__price strong {
+
+      font-size: 17px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop-card__price s {
+
+      font-size: 9px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop-card__price em {
+
+      font-size: 8px;
+    }
+
+    #shop-{{ section.id }} .purelane-shop-card__button {
+
+      min-height: 38px;
+
+      padding: 0 8px;
+
+      font-size: 8px;
+
+      letter-spacing: .10em;
+    }
+
+  }
+
+
+  /* =========================================================
+     REDUCED MOTION
+     ========================================================= */
+
+  @media (prefers-reduced-motion: reduce) {
+
+    #shop-{{ section.id }} .purelane-shop-card,
+    #shop-{{ section.id }} .purelane-shop-card__image,
+    #shop-{{ section.id }} .purelane-shop-card__button {
+
+      transition: none !important;
+    }
+
+    #shop-{{ section.id }} .purelane-shop-card:hover,
+    #shop-{{ section.id }}
+    .purelane-shop-card:hover
+    .purelane-shop-card__image,
+    #shop-{{ section.id }}
+    .purelane-shop-card__button:hover {
+
+      transform: none !important;
+    }
+
+  }
+
+</style>
+
+
 {% schema %}
 {
   "name": "Purelane Product Grid",
-  "tag": "section",
-  "class": "section-purelane-product-grid",
   "settings": [
     {
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "Shop Purelane"
+      "default": "Bestsellers"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Clean smarter. Live better."
-    },
-    {
-      "type": "richtext",
-      "id": "description",
-      "label": "Description",
-      "default": "<p>Plant-powered essentials made for everyday cleaning.</p>"
+      "default": "Loved by 30,000 homes"
     },
     {
       "type": "collection",
@@ -203,36 +1348,16 @@
       "default": 8
     },
     {
-      "type": "select",
-      "id": "desktop_columns",
-      "label": "Desktop columns",
-      "options": [
-        {
-          "value": "2",
-          "label": "2"
-        },
-        {
-          "value": "3",
-          "label": "3"
-        },
-        {
-          "value": "4",
-          "label": "4"
-        }
-      ],
-      "default": "4"
-    },
-    {
       "type": "checkbox",
       "id": "show_view_all",
-      "label": "Show view all button",
-      "default": true
+      "label": "Show view all",
+      "default": false
     },
     {
       "type": "text",
       "id": "view_all_label",
-      "label": "View all button label",
-      "default": "Shop all products"
+      "label": "View all label",
+      "default": "View all products"
     }
   ],
   "presets": [

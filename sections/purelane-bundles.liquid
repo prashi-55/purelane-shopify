@@ -1,256 +1,379 @@
-<section class="purelane-bundles" id="bundles-{{ section.id }}">
-  <div class="purelane-bundles__inner">
-
-    <div class="purelane-bundles__header">
-      {% if section.settings.eyebrow != blank %}
-        <p class="purelane-bundles__eyebrow">
-          {{ section.settings.eyebrow }}
-        </p>
-      {% endif %}
-
-      {% if section.settings.heading != blank %}
-        <h2 class="purelane-bundles__heading">
-          {{ section.settings.heading }}
-        </h2>
-      {% endif %}
-
-      {% if section.settings.description != blank %}
-        <div class="purelane-bundles__description">
-          {{ section.settings.description }}
-        </div>
-      {% endif %}
-    </div>
-
-    <div class="purelane-bundles__grid">
-      {% for block in section.blocks %}
-        {% assign product = block.settings.product %}
-
-        {% if product != blank %}
-          <article class="purelane-bundle" {{ block.shopify_attributes }}>
-
-            <a
-              href="{{ product.url }}"
-              class="purelane-bundle__image"
-              aria-label="{{ product.title | escape }}"
-            >
-              {% if product.featured_image %}
-                {{
-                  product.featured_image
-                  | image_url: width: 900
-                  | image_tag:
-                    loading: 'lazy',
-                    widths: '360, 540, 720, 900',
-                    sizes: '(min-width: 990px) 33vw, 90vw',
-                    alt: product.featured_image.alt | default: product.title
-                }}
-              {% else %}
-                <div class="purelane-bundle__placeholder">
-                  No image
-                </div>
-              {% endif %}
-            </a>
-
-            <div class="purelane-bundle__content">
-
-              {% if block.settings.label != blank %}
-                <span class="purelane-bundle__label">
-                  {{ block.settings.label }}
-                </span>
-              {% endif %}
-
-              <h3 class="purelane-bundle__title">
-                <a href="{{ product.url }}">
-                  {{ product.title }}
-                </a>
-              </h3>
-
-              {% if block.settings.description != blank %}
-                <p class="purelane-bundle__description">
-                  {{ block.settings.description }}
-                </p>
-              {% endif %}
-
-              <div class="purelane-bundle__bottom">
-                <span class="purelane-bundle__price">
-                  {{ product.price | money }}
-                </span>
-
-                <a
-                  href="{{ product.url }}"
-                  class="purelane-bundle__button"
-                >
-                  {{ block.settings.button_label }}
-                  <span aria-hidden="true">→</span>
-                </a>
-              </div>
-
-            </div>
-          </article>
+<section id="bundles-{{ section.id }}" class="purelane-bundles-reference">
+  <div class="purelane-bundles-reference__inner">
+    <header class="purelane-bundles-reference__intro">
+      <div class="purelane-bundles-reference__heading">
+        <span class="purelane-bundles-reference__eyebrow">{{ section.settings.eyebrow | escape }}</span>
+        <h2>{{ section.settings.heading | escape }}</h2>
+        {% if section.settings.description != blank %}
+          <div class="purelane-bundles-reference__description">{{ section.settings.description }}</div>
         {% endif %}
+      </div>
+    </header>
+
+    <div class="purelane-bundles-reference__tiers">
+      {% for block in section.blocks %}
+        <article class="purelane-bundle-tier{% if block.settings.featured %} purelane-bundle-tier--featured{% endif %}" {{ block.shopify_attributes }}>
+          <span class="purelane-bundle-tier__tag">{{ block.settings.tag | escape }}</span>
+
+          <div class="purelane-bundle-tier__pix{% if block.settings.visual_count == '5' %} purelane-bundle-tier__pix--five{% endif %}" aria-hidden="true">
+            {% case block.settings.visual %}
+              {% when 'starter' %}
+                <span class="pimg p-combo2" role="img" aria-label="Purelane starter bundle"></span>
+              {% when 'popular' %}
+                <span class="pimg p-kitchen" role="img" aria-label="Purelane foaming kitchen cleaner"></span>
+                <span class="pimg p-tap" role="img" aria-label="Purelane tap cleaner and limescale remover"></span>
+                <span class="pimg p-dish" role="img" aria-label="Purelane organic dishwash liquid gel"></span>
+              {% when 'whole_home' %}
+                <span class="pimg p-kitchen" role="img" aria-label="Purelane foaming kitchen cleaner"></span>
+                <span class="pimg p-tap" role="img" aria-label="Purelane tap cleaner and limescale remover"></span>
+                <span class="pimg p-floor" role="img" aria-label="Purelane natural herbal floor cleaner"></span>
+                <span class="pimg p-toilet" role="img" aria-label="Purelane non-toxic toilet cleaner"></span>
+                <span class="pimg p-laundry" role="img" aria-label="Purelane non-toxic laundry detergent"></span>
+            {% endcase %}
+          </div>
+
+          <div class="purelane-bundle-tier__qty">
+            {{ block.settings.quantity | escape }}
+            <small>Products</small>
+          </div>
+
+          <div class="purelane-bundle-tier__price">
+            {{ block.settings.price | escape }}
+            {% if block.settings.compare_price != blank %}
+              <s>{{ block.settings.compare_price | escape }}</s>
+            {% endif %}
+          </div>
+
+          {% if block.settings.per_product != blank %}
+            <p class="purelane-bundle-tier__per-product">{{ block.settings.per_product | escape }}</p>
+          {% endif %}
+
+          {% if block.settings.bullet_1 != blank or block.settings.bullet_2 != blank or block.settings.bullet_3 != blank %}
+            <ul class="purelane-bundle-tier__features">
+              {% if block.settings.bullet_1 != blank %}
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>{{ block.settings.bullet_1 | escape }}</li>
+              {% endif %}
+              {% if block.settings.bullet_2 != blank %}
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>{{ block.settings.bullet_2 | escape }}</li>
+              {% endif %}
+              {% if block.settings.bullet_3 != blank %}
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>{{ block.settings.bullet_3 | escape }}</li>
+              {% endif %}
+            </ul>
+          {% endif %}
+
+          <a class="purelane-bundle-tier__button{% if block.settings.featured %} purelane-bundle-tier__button--featured{% endif %}" href="{{ block.settings.button_link | default: '#shop' }}">
+            {{ block.settings.button_label | escape }}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13m-5-6 6 6-6 6"/></svg>
+          </a>
+        </article>
       {% endfor %}
     </div>
-
   </div>
-</section>
 
-<style>
-  #bundles-{{ section.id }} {
-    background: #ece6f7;
-    color: #17102b;
-    padding: 80px 24px;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundles__inner {
-    max-width: 1280px;
-    margin: 0 auto;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundles__header {
-    max-width: 720px;
-    margin-bottom: 40px;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundles__eyebrow {
-    margin: 0 0 10px;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: #4b3a8f;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundles__heading {
-    margin: 0;
-    font-size: clamp(36px, 5vw, 64px);
-    line-height: .95;
-    letter-spacing: -.04em;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundles__description {
-    margin-top: 18px;
-    color: #514a63;
-    line-height: 1.6;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundles__grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 24px;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundle {
-    overflow: hidden;
-    background: #fff;
-    border-radius: 24px;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundle__image {
-    display: block;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    background: #f5f2f8;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundle__image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundle__placeholder {
-    height: 100%;
-    display: grid;
-    place-items: center;
-    color: #777;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundle__content {
-    padding: 24px;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundle__label {
-    display: inline-block;
-    margin-bottom: 10px;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: #4b3a8f;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundle__title {
-    margin: 0;
-    font-size: 22px;
-    line-height: 1.15;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundle__title a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundle__description {
-    margin: 12px 0 20px;
-    color: #625b72;
-    line-height: 1.5;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundle__bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundle__price {
-    font-weight: 700;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundle__button {
-    color: #17102b;
-    font-weight: 800;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-
-  #bundles-{{ section.id }} .purelane-bundle__button:focus-visible,
-  #bundles-{{ section.id }} a:focus-visible {
-    outline: 3px solid #f0a03c;
-    outline-offset: 4px;
-  }
-
-  @media screen and (max-width: 749px) {
+  <style>
     #bundles-{{ section.id }} {
-      padding: 56px 18px;
+      --pb-bg-1: #edf9f2;
+      --pb-bg-2: #d8f0e1;
+      --pb-bg-3: #a9dcc2;
+      --pb-ink: #17102b;
+      --pb-muted: #5d5874;
+      --pb-soft: rgba(255,255,255,.64);
+      --pb-border: rgba(92,117,109,.20);
+      --pb-green: #147d72;
+      --pb-green-2: #2d9471;
+      --pb-orange: #d58a25;
+      --pb-olive: #7d9b43;
+      position: relative;
+      overflow: hidden;
+      padding: 30px 0 54px;
+      color: var(--pb-ink);
+      background:
+        radial-gradient(75% 42% at 50% 0%, rgba(255,255,255,.86), transparent 72%),
+        linear-gradient(180deg, var(--pb-bg-1) 0%, var(--pb-bg-2) 47%, var(--pb-bg-3) 100%);
+      isolation: isolate;
     }
 
-    #bundles-{{ section.id }} .purelane-bundles__grid {
-      grid-template-columns: 1fr;
+    #bundles-{{ section.id }}::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .42;
+      background:
+        radial-gradient(circle at 7% 54%, rgba(255,255,255,.72) 0 2px, transparent 3px),
+        radial-gradient(circle at 66% 28%, rgba(255,255,255,.60) 0 2px, transparent 3px),
+        repeating-linear-gradient(173deg, transparent 0 58px, rgba(255,255,255,.24) 59px 61px, transparent 62px 128px);
     }
 
-    #bundles-{{ section.id }} .purelane-bundle__bottom {
-      align-items: flex-start;
+    #bundles-{{ section.id }} .purelane-bundles-reference__inner {
+      width: min(1240px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundles-reference__intro {
+      margin-bottom: 18px;
+      padding: 34px 30px 35px;
+      border: 1px solid rgba(255,255,255,.72);
+      border-radius: 28px;
+      background: linear-gradient(150deg, rgba(255,255,255,.78), rgba(239,249,244,.64));
+      box-shadow: 0 18px 42px rgba(54,92,75,.10), inset 0 1px 0 rgba(255,255,255,.9);
+      backdrop-filter: blur(22px) saturate(145%);
+      -webkit-backdrop-filter: blur(22px) saturate(145%);
+      text-align: center;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundles-reference__heading {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundles-reference__eyebrow {
+      display: block;
+      color: rgba(63,58,93,.58);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .22em;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundles-reference__heading h2 {
+      margin: 13px 0 0;
+      color: var(--pb-ink);
+      font-family: Outfit, Inter, system-ui, sans-serif;
+      font-size: clamp(36px, 5.1vw, 60px);
+      font-weight: 800;
+      letter-spacing: -.035em;
+      line-height: .96;
+      text-transform: uppercase;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundles-reference__description {
+      max-width: 720px;
+      margin: 16px auto 0;
+      color: var(--pb-muted);
+      font-size: 17px;
+      line-height: 1.55;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundles-reference__description p { margin: 0; }
+
+    #bundles-{{ section.id }} .purelane-bundles-reference__tiers {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier {
+      position: relative;
+      display: flex;
+      min-width: 0;
+      min-height: 520px;
       flex-direction: column;
+      overflow: hidden;
+      padding: 24px;
+      border: 1px solid var(--pb-border);
+      border-radius: 28px;
+      background: linear-gradient(158deg, rgba(255,255,255,.88), rgba(234,247,240,.80) 52%, rgba(195,228,210,.78));
+      box-shadow: 0 20px 44px rgba(55,93,77,.14), inset 0 1px 0 rgba(255,255,255,.92);
+      backdrop-filter: blur(22px) saturate(145%);
+      -webkit-backdrop-filter: blur(22px) saturate(145%);
+      transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
     }
-  }
 
-  @media (prefers-reduced-motion: reduce) {
-    #bundles-{{ section.id }} *,
-    #bundles-{{ section.id }} *::before,
-    #bundles-{{ section.id }} *::after {
-      scroll-behavior: auto !important;
-      transition: none !important;
-      animation: none !important;
+    #bundles-{{ section.id }} .purelane-bundle-tier:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 26px 52px rgba(55,93,77,.18), inset 0 1px 0 rgba(255,255,255,.95);
     }
-  }
-</style>
+
+    #bundles-{{ section.id }} .purelane-bundle-tier--featured {
+      border-color: rgba(213,138,37,.56);
+      box-shadow: 0 22px 50px rgba(55,93,77,.17), 0 0 0 1px rgba(213,138,37,.12), inset 0 1px 0 rgba(255,255,255,.95);
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__tag {
+      align-self: flex-start;
+      display: inline-flex;
+      min-height: 30px;
+      align-items: center;
+      padding: 0 12px;
+      border: 1px solid rgba(125,155,67,.28);
+      border-radius: 999px;
+      background: rgba(255,255,255,.54);
+      color: var(--pb-olive);
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: .15em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__pix {
+      display: flex;
+      height: 118px;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 10px;
+      padding: 10px 18px;
+      border: 1px solid rgba(105,131,119,.14);
+      border-radius: 18px;
+      background: linear-gradient(150deg, rgba(255,255,255,.68), rgba(242,250,246,.44));
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__pix .pimg {
+      flex: 0 0 auto;
+      transform-origin: center bottom;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__pix--five { gap: 1px; padding-left: 10px; padding-right: 10px; }
+    #bundles-{{ section.id }} .purelane-bundle-tier__pix--five .pimg { transform: scale(.82); margin: 0 -5px; }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__qty {
+      margin-top: 16px;
+      color: var(--pb-ink);
+      font-family: Outfit, Inter, system-ui, sans-serif;
+      font-size: 58px;
+      font-weight: 800;
+      letter-spacing: -.055em;
+      line-height: .86;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__qty small {
+      display: block;
+      margin-top: 8px;
+      color: rgba(93,88,116,.64);
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .11em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__price {
+      margin-top: 23px;
+      color: var(--pb-orange);
+      font-family: Outfit, Inter, system-ui, sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -.025em;
+      line-height: 1;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__price s {
+      margin-left: 8px;
+      color: rgba(93,88,116,.72);
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__per-product {
+      margin: 12px 0 0;
+      color: var(--pb-muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__features {
+      display: grid;
+      gap: 10px;
+      margin: 20px 0 22px;
+      padding: 0;
+      list-style: none;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      color: var(--pb-muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__features svg {
+      width: 14px;
+      height: 14px;
+      flex: 0 0 auto;
+      margin-top: 1px;
+      color: var(--pb-olive);
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__button {
+      display: inline-flex;
+      width: 100%;
+      min-height: 50px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: auto;
+      padding: 0 20px;
+      border: 1px solid rgba(92,117,109,.18);
+      border-radius: 999px;
+      background: rgba(255,255,255,.82);
+      color: #176b62;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .15em;
+      line-height: 1;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: transform .3s ease, background .3s ease, box-shadow .3s ease;
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__button svg { width: 16px; height: 16px; }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__button:hover {
+      transform: translateY(-2px);
+      background: #fff;
+      box-shadow: 0 12px 24px rgba(55,93,77,.12);
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__button--featured {
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--pb-green), var(--pb-green-2));
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(20,125,114,.24), inset 0 1px 0 rgba(255,255,255,.42);
+    }
+
+    #bundles-{{ section.id }} .purelane-bundle-tier__button--featured:hover {
+      background: linear-gradient(135deg, #168679, #399b76);
+      box-shadow: 0 18px 38px rgba(20,125,114,.30), inset 0 1px 0 rgba(255,255,255,.50);
+    }
+
+    @media (max-width: 900px) {
+      #bundles-{{ section.id }} .purelane-bundles-reference__tiers { grid-template-columns: 1fr; }
+      #bundles-{{ section.id }} .purelane-bundle-tier { min-height: 0; }
+    }
+
+    @media (max-width: 600px) {
+      #bundles-{{ section.id }} { padding: 20px 0 40px; }
+      #bundles-{{ section.id }} .purelane-bundles-reference__inner { width: min(100% - 24px, 1240px); }
+      #bundles-{{ section.id }} .purelane-bundles-reference__intro { padding: 28px 18px 30px; border-radius: 22px; }
+      #bundles-{{ section.id }} .purelane-bundles-reference__heading h2 { font-size: clamp(32px, 10vw, 44px); }
+      #bundles-{{ section.id }} .purelane-bundles-reference__description { font-size: 15px; }
+      #bundles-{{ section.id }} .purelane-bundle-tier { padding: 18px; border-radius: 22px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #bundles-{{ section.id }} .purelane-bundle-tier,
+      #bundles-{{ section.id }} .purelane-bundle-tier__button { transition: none; }
+      #bundles-{{ section.id }} .purelane-bundle-tier:hover,
+      #bundles-{{ section.id }} .purelane-bundle-tier__button:hover { transform: none; }
+    }
+  </style>
+</section>
 
 {% schema %}
 {
   "name": "Purelane Bundles",
   "tag": "section",
-  "class": "section",
+  "class": "section-purelane-bundles",
   "settings": [
     {
       "type": "text",
@@ -262,13 +385,13 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Better together."
+      "default": "One box. Every room."
     },
     {
       "type": "richtext",
       "id": "description",
       "label": "Description",
-      "default": "<p>Pair your Purelane essentials and save on everyday cleaning.</p>"
+      "default": "<p>Mix and match across kitchen, laundry, home and skin. One flat price, no code needed, free shipping either way.</p>"
     }
   ],
   "blocks": [
@@ -277,27 +400,91 @@
       "name": "Bundle",
       "settings": [
         {
-          "type": "product",
-          "id": "product",
-          "label": "Product"
+          "type": "select",
+          "id": "visual",
+          "label": "Visual",
+          "default": "starter",
+          "options": [
+            { "value": "starter", "label": "Starter" },
+            { "value": "popular", "label": "Most popular" },
+            { "value": "whole_home", "label": "Whole home" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "visual_count",
+          "label": "Visual count",
+          "default": "2",
+          "options": [
+            { "value": "2", "label": "2 products" },
+            { "value": "3", "label": "3 products" },
+            { "value": "5", "label": "5 products" }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Featured bundle",
+          "default": false
         },
         {
           "type": "text",
-          "id": "label",
-          "label": "Bundle label",
-          "default": "SAVE MORE"
+          "id": "tag",
+          "label": "Tag",
+          "default": "Starter"
         },
         {
-          "type": "textarea",
-          "id": "description",
-          "label": "Description",
-          "default": "A simple combination for everyday cleaning."
+          "type": "text",
+          "id": "quantity",
+          "label": "Quantity",
+          "default": "2"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "₹349"
+        },
+        {
+          "type": "text",
+          "id": "compare_price",
+          "label": "Compare-at price",
+          "default": "₹598"
+        },
+        {
+          "type": "text",
+          "id": "per_product",
+          "label": "Per-product note",
+          "default": "Flat ₹174 per product"
+        },
+        {
+          "type": "text",
+          "id": "bullet_1",
+          "label": "Bullet 1",
+          "default": "Pick any two products"
+        },
+        {
+          "type": "text",
+          "id": "bullet_2",
+          "label": "Bullet 2",
+          "default": "Free shipping across India"
+        },
+        {
+          "type": "text",
+          "id": "bullet_3",
+          "label": "Bullet 3",
+          "default": "No code needed"
         },
         {
           "type": "text",
           "id": "button_label",
           "label": "Button label",
-          "default": "Shop bundle"
+          "default": "Build this box"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
         }
       ]
     }
@@ -307,17 +494,53 @@
       "name": "Purelane Bundles",
       "blocks": [
         {
-          "type": "bundle"
+          "type": "bundle",
+          "settings": {
+            "visual": "starter",
+            "visual_count": "2",
+            "tag": "Starter",
+            "quantity": "2",
+            "price": "₹349",
+            "compare_price": "₹598",
+            "per_product": "Flat ₹174 per product",
+            "bullet_1": "Pick any two products",
+            "bullet_2": "Free shipping across India",
+            "bullet_3": "No code needed"
+          }
         },
         {
-          "type": "bundle"
+          "type": "bundle",
+          "settings": {
+            "visual": "popular",
+            "visual_count": "3",
+            "featured": true,
+            "tag": "Most popular",
+            "quantity": "3",
+            "price": "₹499",
+            "compare_price": "₹897",
+            "per_product": "Flat ₹166 per product",
+            "bullet_1": "Pick any three products",
+            "bullet_2": "Covers kitchen and laundry",
+            "bullet_3": "Free shipping across India"
+          }
         },
         {
-          "type": "bundle"
+          "type": "bundle",
+          "settings": {
+            "visual": "whole_home",
+            "visual_count": "5",
+            "tag": "Whole home",
+            "quantity": "5",
+            "price": "₹799",
+            "compare_price": "₹1495",
+            "per_product": "Flat ₹160 per product",
+            "bullet_1": "Pick any five products",
+            "bullet_2": "Every room in one order",
+            "bullet_3": "Free shipping across India"
+          }
         }
       ]
     }
-  ],
-  "max_blocks": 6
+  ]
 }
 {% endschema %}

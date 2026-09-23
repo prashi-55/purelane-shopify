@@ -1,162 +1,688 @@
-<section
-  id="purelane-combos-{{ section.id }}"
-  class="purelane-combos"
-  aria-labelledby="purelane-combos-heading-{{ section.id }}"
->
-  <div class="purelane-combos__inner">
+<section class="purelane-combos purelane-combos--reference" id="combos-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="purelane-combos__wrap">
+    <div class="purelane-combos__head">
+      {% if section.settings.eyebrow != blank %}
+        <span class="purelane-combos__kicker">{{ section.settings.eyebrow | escape }}</span>
+      {% endif %}
 
-    <div class="purelane-combos__header">
-      <div>
-        {% if section.settings.eyebrow != blank %}
-          <p class="purelane-combos__eyebrow">
-            {{ section.settings.eyebrow }}
-          </p>
-        {% endif %}
+      <h2 class="purelane-combos__title">{{ section.settings.heading | escape }}</h2>
 
-        {% if section.settings.heading != blank %}
-          <h2 id="purelane-combos-heading-{{ section.id }}">
-            {{ section.settings.heading }}
-          </h2>
-        {% endif %}
-
-        {% if section.settings.description != blank %}
-          <div class="purelane-combos__description">
-            {{ section.settings.description }}
-          </div>
-        {% endif %}
+      <div class="purelane-combos__rule" aria-hidden="true">
+        <i></i>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 21c0-6.5 3.5-11 8-12.5C20 15 16.5 20 12 21Z"/>
+          <path d="M12 21C12 14.5 8.5 10 4 8.5 4 15 7.5 20 12 21Z"/>
+        </svg>
+        <i></i>
       </div>
 
-      {% if section.settings.show_shop_all and section.settings.shop_all_link != blank %}
-        <a
-          class="purelane-combos__shop-all"
-          href="{{ section.settings.shop_all_link }}"
-        >
-          {{ section.settings.shop_all_label }}
-          <span aria-hidden="true">→</span>
-        </a>
+      {% if section.settings.description != blank %}
+        <div class="purelane-combos__lede">{{ section.settings.description }}</div>
       {% endif %}
     </div>
 
-    {% if section.blocks.size > 0 %}
-      <div class="purelane-combos__grid">
+    <div class="purelane-combos__rail" role="region" aria-label="{{ section.settings.heading | escape }}">
+      {% for block in section.blocks %}
+        {% assign product_1 = block.settings.product_1 %}
+        {% assign product_2 = block.settings.product_2 %}
+        {% assign product_3 = block.settings.product_3 %}
 
-        {% for block in section.blocks %}
-          {% assign combo_product = block.settings.product %}
+        <article
+          class="purelane-combo-card{% if block.settings.featured %} purelane-combo-card--featured{% endif %}"
+          {{ block.shopify_attributes }}
+        >
+          <div class="purelane-combo-card__tray">
+            {% if block.settings.save_badge != blank %}
+              <span class="purelane-combo-card__save">{{ block.settings.save_badge | escape }}</span>
+            {% endif %}
 
-          <article
-            class="purelane-combo-card"
-            {{ block.shopify_attributes }}
-          >
+            {% if block.settings.flag != blank and block.settings.flag != 'No badge' %}
+              <span class="purelane-combo-card__flag">{{ block.settings.flag | escape }}</span>
+            {% endif %}
 
-            <div class="purelane-combo-card__media">
-              {% if combo_product != blank and combo_product.featured_image != blank %}
-
-                <a
-                  href="{{ combo_product.url }}"
-                  class="purelane-combo-card__image-link"
-                  aria-label="View {{ combo_product.title | escape }}"
-                >
-                  {{
-                    combo_product.featured_image
-                    | image_url: width: 900
-                    | image_tag:
-                      loading: 'lazy',
-                      widths: '360, 540, 720, 900',
-                      sizes: '(min-width: 990px) 33vw, 90vw',
-                      class: 'purelane-combo-card__image',
-                      alt: combo_product.featured_image.alt | default: combo_product.title
-                  }}
-                </a>
-
-              {% else %}
-                <div class="purelane-combo-card__placeholder">
-                  <span>No image</span>
+            <div class="purelane-combo-card__stack">
+              {% if product_1 != blank %}
+                <div class="purelane-combo-card__item">
+                  {% if product_1.featured_image %}
+                    <a href="{{ product_1.url }}" class="purelane-combo-card__image-link" aria-label="{{ product_1.title | escape }}">
+                      {{
+                        product_1.featured_image
+                        | image_url: width: 360
+                        | image_tag:
+                          widths: '180,240,300,360',
+                          sizes: '(max-width: 760px) 72px, 92px',
+                          loading: 'lazy',
+                          class: 'purelane-combo-card__product-image',
+                          alt: product_1.title
+                      }}
+                    </a>
+                  {% else %}
+                    <div class="purelane-combo-card__no-image" aria-hidden="true">
+                      <span>{{ product_1.title | slice: 0, 1 }}</span>
+                    </div>
+                  {% endif %}
+                  {% if block.settings.note_1 != blank %}
+                    <span>{{ block.settings.note_1 | escape }}</span>
+                  {% else %}
+                    <span>{{ product_1.title | escape }}</span>
+                  {% endif %}
                 </div>
               {% endif %}
 
-              {% if block.settings.combo_label != blank %}
-                <span class="purelane-combo-card__badge">
-                  {{ block.settings.combo_label }}
-                </span>
+              {% if product_2 != blank %}
+                <span class="purelane-combo-card__plus" aria-hidden="true">+</span>
+                <div class="purelane-combo-card__item">
+                  {% if product_2.featured_image %}
+                    <a href="{{ product_2.url }}" class="purelane-combo-card__image-link" aria-label="{{ product_2.title | escape }}">
+                      {{
+                        product_2.featured_image
+                        | image_url: width: 360
+                        | image_tag:
+                          widths: '180,240,300,360',
+                          sizes: '(max-width: 760px) 72px, 92px',
+                          loading: 'lazy',
+                          class: 'purelane-combo-card__product-image',
+                          alt: product_2.title
+                      }}
+                    </a>
+                  {% else %}
+                    <div class="purelane-combo-card__no-image" aria-hidden="true">
+                      <span>{{ product_2.title | slice: 0, 1 }}</span>
+                    </div>
+                  {% endif %}
+                  {% if block.settings.note_2 != blank %}
+                    <span>{{ block.settings.note_2 | escape }}</span>
+                  {% else %}
+                    <span>{{ product_2.title | escape }}</span>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+              {% if product_3 != blank %}
+                <span class="purelane-combo-card__plus" aria-hidden="true">+</span>
+                <div class="purelane-combo-card__item">
+                  {% if product_3.featured_image %}
+                    <a href="{{ product_3.url }}" class="purelane-combo-card__image-link" aria-label="{{ product_3.title | escape }}">
+                      {{
+                        product_3.featured_image
+                        | image_url: width: 360
+                        | image_tag:
+                          widths: '180,240,300,360',
+                          sizes: '(max-width: 760px) 72px, 92px',
+                          loading: 'lazy',
+                          class: 'purelane-combo-card__product-image',
+                          alt: product_3.title
+                      }}
+                    </a>
+                  {% else %}
+                    <div class="purelane-combo-card__no-image" aria-hidden="true">
+                      <span>{{ product_3.title | slice: 0, 1 }}</span>
+                    </div>
+                  {% endif %}
+                  {% if block.settings.note_3 != blank %}
+                    <span>{{ block.settings.note_3 | escape }}</span>
+                  {% else %}
+                    <span>{{ product_3.title | escape }}</span>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="purelane-combo-card__body">
+            <h3>{{ block.settings.title | escape }}</h3>
+
+            {% if block.settings.count != blank %}
+              <div class="purelane-combo-card__count">{{ block.settings.count | escape }}</div>
+            {% endif %}
+
+            {% if block.settings.description != blank %}
+              <p class="purelane-combo-card__description">{{ block.settings.description | escape }}</p>
+            {% endif %}
+
+            <div class="purelane-combo-card__price-row">
+              {% if block.settings.price != blank %}
+                <strong>{{ block.settings.price | escape }}</strong>
+              {% endif %}
+              {% if block.settings.compare_price != blank %}
+                <s>{{ block.settings.compare_price | escape }}</s>
+              {% endif %}
+              {% if block.settings.savings != blank %}
+                <em>{{ block.settings.savings | escape }}</em>
               {% endif %}
             </div>
 
-            <div class="purelane-combo-card__content">
-
-              {% if combo_product != blank %}
-                <h3 class="purelane-combo-card__title">
-                  <a href="{{ combo_product.url }}">
-                    {{ combo_product.title }}
-                  </a>
-                </h3>
-              {% else %}
-                <h3 class="purelane-combo-card__title">
-                  Select a product
-                </h3>
-              {% endif %}
-
-              {% if block.settings.description != blank %}
-                <p class="purelane-combo-card__description">
-                  {{ block.settings.description }}
-                </p>
-              {% endif %}
-
-              <div class="purelane-combo-card__footer">
-
-                {% if combo_product != blank %}
-                  <div class="purelane-combo-card__price">
-                    {% if combo_product.compare_at_price > combo_product.price %}
-                      <span class="purelane-combo-card__sale-price">
-                        {{ combo_product.price | money }}
-                      </span>
-
-                      <span class="purelane-combo-card__compare-price">
-                        {{ combo_product.compare_at_price | money }}
-                      </span>
-                    {% else %}
-                      <span>
-                        {{ combo_product.price | money }}
-                      </span>
-                    {% endif %}
-                  </div>
-                {% endif %}
-
-                {% if combo_product != blank %}
-                  <a
-                    class="purelane-combo-card__button"
-                    href="{{ combo_product.url }}"
-                  >
-                    {{ section.settings.button_label }}
-                    <span aria-hidden="true">→</span>
-                  </a>
-                {% endif %}
-
-              </div>
+            <div class="purelane-combo-card__fineprint">
+              {{ block.settings.fineprint | default: 'Inclusive of all taxes · COD available' | escape }}
             </div>
 
-          </article>
-        {% endfor %}
+            <a
+              class="purelane-combo-card__button{% if block.settings.featured %} purelane-combo-card__button--primary{% endif %}"
+              href="{{ block.settings.button_link | default: section.settings.default_button_link | default: '#bundles' }}"
+            >
+              {{ block.settings.button_label | default: 'Shop bundle' | escape }}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h13m-5-6 6 6-6 6"/>
+              </svg>
+            </a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
 
-      </div>
-    {% else %}
-      <div class="purelane-combos__empty">
-        Add combo products using the Theme Editor.
+    {% if section.settings.show_swipe_hint %}
+      <div class="purelane-combos__swipe-hint" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h13m-5-6 6 6-6 6"/>
+        </svg>
+        {{ section.settings.swipe_text | escape }}
       </div>
     {% endif %}
 
+    {% if section.settings.rail_note != blank %}
+      <p class="purelane-combos__note">{{ section.settings.rail_note | escape }}</p>
+    {% endif %}
   </div>
-</section>
 
-<style>
-  #purelane-combos-{{ section.id }} {
-    --combo-ink: #17102b;
-    --combo-muted: #716987;
-    --combo-paper: #f7f4fb;
-    --combo-white: #ffffff;
-    --combo-brand: #4b3a8f;
-    --combo-accent: #f0a03c;
-  }
-</style>
+  <style>
+    #combos-{{ section.id }} {
+      --combo-ink: #17102b;
+      --combo-deep: #2f2852;
+      --combo-brand: #6b5a9d;
+      --combo-paper: #3f3a5d;
+      --combo-paper-2: rgba(63,58,93,.78);
+      --combo-paper-3: rgba(63,58,93,.58);
+      --combo-accent: #d88a25;
+      --combo-accent-2: #167d72;
+      --combo-surface: #17102b;
+      --combo-ease: cubic-bezier(.2,.7,.2,1);
+
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+      padding: 34px 0;
+      background:
+        radial-gradient(85% 55% at 50% 0%, rgba(255,255,255,.78), transparent 68%),
+        linear-gradient(180deg, #e8f7ed 0%, #d4efdf 46%, #bfe5d0 100%);
+      color: var(--combo-ink);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #combos-{{ section.id }}::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .34;
+      background:
+        radial-gradient(circle at 12% 42%, rgba(255,255,255,.55) 0 2px, transparent 3px),
+        radial-gradient(circle at 67% 36%, rgba(255,255,255,.48) 0 2px, transparent 3px),
+        repeating-linear-gradient(173deg, transparent 0 58px, rgba(255,255,255,.22) 59px 61px, transparent 62px 126px);
+      mix-blend-mode: soft-light;
+    }
+
+    #combos-{{ section.id }} .purelane-combos__wrap {
+      position: relative;
+      z-index: 1;
+    }
+
+    #combos-{{ section.id }} *,
+    #combos-{{ section.id }} *::before,
+    #combos-{{ section.id }} *::after {
+      box-sizing: border-box;
+    }
+
+    #combos-{{ section.id }} .purelane-combos__wrap {
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    #combos-{{ section.id }} .purelane-combos__head {
+      max-width: 760px;
+      margin: 0 auto 34px;
+      text-align: center;
+    }
+
+    #combos-{{ section.id }} .purelane-combos__kicker {
+      display: block;
+      color: var(--combo-paper-3);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .22em;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+
+    #combos-{{ section.id }} .purelane-combos__title {
+      margin: 12px 0 0;
+      color: var(--combo-surface);
+      font-family: Outfit, system-ui, sans-serif;
+      font-size: clamp(30px, 4.6vw, 54px);
+      font-weight: 800;
+      letter-spacing: -.018em;
+      line-height: .94;
+      text-transform: uppercase;
+    }
+
+    #combos-{{ section.id }} .purelane-combos__rule {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      width: min(270px, 72%);
+      margin: 17px auto 0;
+      color: var(--combo-accent);
+    }
+
+    #combos-{{ section.id }} .purelane-combos__rule i {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(82,111,101,.34), transparent);
+    }
+
+    #combos-{{ section.id }} .purelane-combos__rule i:last-child {
+      transform: scaleX(-1);
+    }
+
+    #combos-{{ section.id }} .purelane-combos__rule svg {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+    }
+
+    #combos-{{ section.id }} .purelane-combos__lede {
+      max-width: 620px;
+      margin: 14px auto 0;
+      color: var(--combo-paper-2);
+      font-size: clamp(15px, 1.35vw, 17.5px);
+      line-height: 1.6;
+    }
+
+    #combos-{{ section.id }} .purelane-combos__lede p {
+      margin: 0;
+    }
+
+    #combos-{{ section.id }} .purelane-combos__rail {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      overflow-y: visible;
+      padding: 4px 2px 12px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(63,112,96,.28) transparent;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #combos-{{ section.id }} .purelane-combos__rail::-webkit-scrollbar {
+      height: 5px;
+    }
+
+    #combos-{{ section.id }} .purelane-combos__rail::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    #combos-{{ section.id }} .purelane-combos__rail::-webkit-scrollbar-thumb {
+      border-radius: 999px;
+      background: rgba(63,112,96,.28);
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card {
+      position: relative;
+      display: flex;
+      flex: 0 0 302px;
+      min-width: 302px;
+      flex-direction: column;
+      overflow: hidden;
+      scroll-snap-align: start;
+      border: 1px solid rgba(92,117,109,.22);
+      border-radius: 26px;
+      background: linear-gradient(158deg, rgba(255,255,255,.94), rgba(241,250,246,.90) 55%, rgba(211,239,227,.88));
+      box-shadow: 0 18px 42px rgba(55,93,77,.16), inset 0 1px 0 rgba(255,255,255,.92);
+      backdrop-filter: blur(24px) saturate(150%);
+      -webkit-backdrop-filter: blur(24px) saturate(150%);
+      transition: transform .4s var(--combo-ease), box-shadow .4s var(--combo-ease), border-color .4s var(--combo-ease);
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card:hover {
+      transform: translateY(-5px);
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card--featured {
+      border-color: rgba(216,138,37,.55);
+      box-shadow:
+        0 20px 48px rgba(55,93,77,.18),
+        0 0 0 1px rgba(216,138,37,.20),
+        inset 0 1px 0 rgba(255,255,255,.95);
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__tray {
+      position: relative;
+      min-height: 192px;
+      padding: 14px 14px 13px;
+      border-bottom: 1px solid rgba(92,117,109,.13);
+      background: linear-gradient(162deg, rgba(255,255,255,.92), rgba(230,245,238,.72));
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__save {
+      position: relative;
+      z-index: 2;
+      display: inline-block;
+      margin-bottom: 13px;
+      padding: 5px 11px;
+      border: 1px solid rgba(216,138,37,.35);
+      border-radius: 999px;
+      background: rgba(255,255,255,.78);
+      color: var(--combo-accent);
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__flag {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 3;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #147d72, #2b9470);
+      color: #ffffff;
+      font-size: 8.6px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__stack {
+      display: flex;
+      min-height: 106px;
+      align-items: flex-end;
+      gap: 3px;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__item {
+      min-width: 0;
+      flex: 1 1 0;
+      text-align: center;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__image-link {
+      display: block;
+      width: fit-content;
+      margin: 0 auto 8px;
+      border-radius: 10px;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__image-link:focus-visible {
+      outline: 2px solid var(--combo-accent);
+      outline-offset: 4px;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__product-image {
+      width: auto;
+      height: 66px;
+      max-width: 92px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 13px rgba(1,24,22,.5));
+      transition: transform .35s var(--combo-ease);
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__image-link:hover .purelane-combo-card__product-image {
+      transform: translateY(-3px);
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__no-image {
+      display: grid;
+      width: 44px;
+      height: 66px;
+      margin: 0 auto 8px;
+      place-items: center;
+      border: 1px dashed rgba(82,111,101,.28);
+      border-radius: 9px;
+      background: rgba(255,255,255,.45);
+      color: var(--combo-accent);
+      font-family: Outfit, sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__item > span:last-child {
+      display: block;
+      color: var(--combo-paper-2);
+      font-size: 8.6px;
+      font-weight: 600;
+      line-height: 1.32;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__plus {
+      flex: 0 0 9px;
+      padding-bottom: 30px;
+      color: #d88a25;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+      text-align: center;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding: 15px 16px 18px;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__body h3 {
+      margin: 0;
+      color: var(--combo-surface);
+      font-family: Outfit, system-ui, sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -.005em;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__count {
+      margin-top: 6px;
+      color: var(--combo-paper-3);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__description {
+      flex: 1;
+      margin: 11px 0 14px;
+      color: var(--combo-paper-2);
+      font-size: 12.4px;
+      line-height: 1.55;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__price-row {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-bottom: 6px;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__price-row strong {
+      color: var(--combo-surface);
+      font-family: Outfit, system-ui, sans-serif;
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__price-row s {
+      color: var(--combo-paper-3);
+      font-size: 13px;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__price-row em {
+      padding: 4px 9px;
+      border: 1px solid rgba(125,155,67,.42);
+      border-radius: 999px;
+      background: rgba(125,155,67,.12);
+      color: #718e3b;
+      font-size: 9.5px;
+      font-style: normal;
+      font-weight: 800;
+      letter-spacing: .1em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__fineprint {
+      margin-bottom: 14px;
+      color: var(--combo-paper-3);
+      font-size: 10.4px;
+      line-height: 1.4;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__button {
+      display: inline-flex;
+      width: 100%;
+      min-height: 46px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 22px;
+      border: 1px solid rgba(92,117,109,.24);
+      border-radius: 999px;
+      background: rgba(255,255,255,.68);
+      color: var(--combo-ink);
+      font-size: 12.5px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      line-height: 1;
+      text-transform: uppercase;
+      transition: transform .35s var(--combo-ease), background .35s var(--combo-ease), border-color .35s var(--combo-ease);
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__button svg {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__button:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,.9);
+      border-color: rgba(92,117,109,.34);
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__button--primary {
+      border-color: transparent;
+      background: linear-gradient(135deg, #147d72, #2b9470);
+      color: #ffffff;
+      box-shadow: 0 12px 28px rgba(20,125,114,.24), inset 0 1px 0 rgba(255,255,255,.5);
+    }
+
+    #combos-{{ section.id }} .purelane-combo-card__button--primary:hover {
+      background: linear-gradient(135deg, #168679, #399b76);
+      box-shadow: 0 18px 40px rgba(20,125,114,.30), inset 0 1px 0 rgba(255,255,255,.55);
+    }
+
+    #combos-{{ section.id }} .purelane-combos__swipe-hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 2px;
+      color: rgba(63,58,93,.52);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+
+    #combos-{{ section.id }} .purelane-combos__swipe-hint svg {
+      width: 14px;
+      height: 14px;
+      color: var(--combo-accent);
+    }
+
+    #combos-{{ section.id }} .purelane-combos__note {
+      max-width: 62ch;
+      margin: 14px auto 0;
+      color: var(--combo-paper-3);
+      font-size: 12px;
+      line-height: 1.55;
+      text-align: center;
+    }
+
+    @media (min-width: 1000px) {
+      #combos-{{ section.id }} .purelane-combos__rail {
+        overflow-x: visible;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      #combos-{{ section.id }} .purelane-combo-card {
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 760px) {
+      #combos-{{ section.id }} {
+        padding: 22px 0;
+      }
+
+      #combos-{{ section.id }} .purelane-combos__wrap {
+        width: min(100% - 28px, 1180px);
+      }
+
+      #combos-{{ section.id }} .purelane-combos__head {
+        margin-bottom: 22px;
+      }
+
+      #combos-{{ section.id }} .purelane-combos__title {
+        font-size: clamp(30px, 9.5vw, 42px);
+      }
+
+      #combos-{{ section.id }} .purelane-combos__rail {
+        margin: 0 -14px;
+        padding: 4px 14px 12px;
+        gap: 10px;
+      }
+
+      #combos-{{ section.id }} .purelane-combo-card {
+        flex-basis: 268px;
+        min-width: 268px;
+        border-radius: 22px;
+      }
+
+      #combos-{{ section.id }} .purelane-combo-card__product-image {
+        height: 56px;
+        max-width: 72px;
+      }
+
+      #combos-{{ section.id }} .purelane-combo-card__tray {
+        min-height: 178px;
+      }
+
+      #combos-{{ section.id }} .purelane-combo-card__stack {
+        min-height: 94px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #combos-{{ section.id }} .purelane-combo-card,
+      #combos-{{ section.id }} .purelane-combo-card__button,
+      #combos-{{ section.id }} .purelane-combo-card__product-image {
+        transition: none;
+      }
+    }
+  </style>
+</section>
 
 {% schema %}
 {
@@ -168,42 +694,42 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "BEST-SELLING COMBOS"
+      "default": "Pre-built to save you money"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Better together."
+      "default": "Best selling combos"
     },
     {
       "type": "richtext",
       "id": "description",
       "label": "Description",
-      "default": "<p>Pair your Purelane essentials and save on everyday cleaning.</p>"
+      "default": "<p>Swipe through the boxes people order most. Each one is already priced below buying the same products on their own.</p>"
+    },
+    {
+      "type": "url",
+      "id": "default_button_link",
+      "label": "Default button link"
     },
     {
       "type": "checkbox",
-      "id": "show_shop_all",
-      "label": "Show shop all link",
+      "id": "show_swipe_hint",
+      "label": "Show swipe hint",
       "default": true
     },
     {
       "type": "text",
-      "id": "shop_all_label",
-      "label": "Shop all label",
-      "default": "SHOP ALL"
+      "id": "swipe_text",
+      "label": "Swipe hint text",
+      "default": "Swipe for more combos"
     },
     {
-      "type": "url",
-      "id": "shop_all_link",
-      "label": "Shop all link"
-    },
-    {
-      "type": "text",
-      "id": "button_label",
-      "label": "Product button label",
-      "default": "SHOP COMBO"
+      "type": "textarea",
+      "id": "rail_note",
+      "label": "Rail note",
+      "default": "Tapping “Shop bundle” opens the bundle picker with these products already added. You can still swap anything before you pay."
     }
   ],
   "blocks": [
@@ -212,21 +738,108 @@
       "name": "Combo",
       "settings": [
         {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Featured card",
+          "default": false
+        },
+        {
           "type": "product",
-          "id": "product",
-          "label": "Product"
+          "id": "product_1",
+          "label": "Product 1"
+        },
+        {
+          "type": "product",
+          "id": "product_2",
+          "label": "Product 2"
+        },
+        {
+          "type": "product",
+          "id": "product_3",
+          "label": "Product 3"
         },
         {
           "type": "text",
-          "id": "combo_label",
-          "label": "Combo label",
-          "default": "BEST SELLER"
+          "id": "note_1",
+          "label": "Product 1 note",
+          "default": "Cuts grease instantly"
+        },
+        {
+          "type": "text",
+          "id": "note_2",
+          "label": "Product 2 note",
+          "default": "Squeaky clean dishes"
+        },
+        {
+          "type": "text",
+          "id": "note_3",
+          "label": "Product 3 note",
+          "default": "Melts hard water stains"
+        },
+        {
+          "type": "text",
+          "id": "save_badge",
+          "label": "Save badge",
+          "default": "You save ₹398"
+        },
+        {
+          "type": "text",
+          "id": "flag",
+          "label": "Flag",
+          "default": "No badge"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Kitchen essentials"
+        },
+        {
+          "type": "text",
+          "id": "count",
+          "label": "Product count",
+          "default": "3 products"
         },
         {
           "type": "textarea",
           "id": "description",
           "label": "Description",
-          "default": "A simple everyday cleaning essential."
+          "default": "Includes: Foaming Kitchen Cleaner, Dishwash Gel & Tap Cleaner. Everything for a sparkling kitchen, no need to pick separately."
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "₹499"
+        },
+        {
+          "type": "text",
+          "id": "compare_price",
+          "label": "Compare price",
+          "default": "₹897"
+        },
+        {
+          "type": "text",
+          "id": "savings",
+          "label": "Savings",
+          "default": "Save ₹398"
+        },
+        {
+          "type": "text",
+          "id": "fineprint",
+          "label": "Fine print",
+          "default": "Inclusive of all taxes · COD available"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Shop bundle"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
         }
       ]
     }
@@ -236,17 +849,82 @@
       "name": "Purelane Combos",
       "blocks": [
         {
-          "type": "combo"
+          "type": "combo",
+          "settings": {
+            "featured": true,
+            "save_badge": "You save ₹398",
+            "flag": "Most popular",
+            "title": "Kitchen essentials",
+            "count": "3 products",
+            "description": "Includes: Foaming Kitchen Cleaner, Dishwash Gel & Tap Cleaner. Everything for a sparkling kitchen, no need to pick separately.",
+            "price": "₹499",
+            "compare_price": "₹897",
+            "savings": "Save ₹398"
+          }
         },
         {
-          "type": "combo"
+          "type": "combo",
+          "settings": {
+            "save_badge": "You save ₹448",
+            "title": "Laundry care bundle",
+            "count": "3 products",
+            "description": "Includes: Laundry Detergent, Fabric Conditioner & Machine Cleaner Powder. Softer, fresher wash, all in one box.",
+            "price": "₹499",
+            "compare_price": "₹947",
+            "savings": "Save ₹448",
+            "note_1": "Removes tough stains & odour",
+            "note_2": "Softens & freshens every wash",
+            "note_3": "Deep-cleans your machine"
+          }
         },
         {
-          "type": "combo"
+          "type": "combo",
+          "settings": {
+            "save_badge": "Biggest saving",
+            "flag": "Best value",
+            "title": "Complete home bundle",
+            "count": "5 products",
+            "description": "Includes: Kitchen Cleaner, Laundry Detergent, Floor Cleaner, Toilet Cleaner & Handwash. Our biggest saving box.",
+            "price": "₹799",
+            "compare_price": "₹1,495",
+            "savings": "Save ₹696",
+            "note_1": "Cuts grease instantly",
+            "note_2": "Kills 99.9% germs",
+            "note_3": "Gentle hydration for hands",
+            "featured": true
+          }
+        },
+        {
+          "type": "combo",
+          "settings": {
+            "save_badge": "You save ₹398",
+            "title": "Bathroom deep clean",
+            "count": "3 products",
+            "description": "Includes: Toilet Cleaner, Tap Cleaner & Magic Eraser. A complete bathroom refresh in one box.",
+            "price": "₹499",
+            "compare_price": "₹897",
+            "savings": "Save ₹398",
+            "note_1": "Kills 99.9% germs",
+            "note_2": "Melts hard water stains",
+            "note_3": "Scrubs away soap scum"
+          }
+        },
+        {
+          "type": "combo",
+          "settings": {
+            "save_badge": "You save ₹249",
+            "title": "Hard water solution kit",
+            "count": "2 products",
+            "description": "Includes: Tap Cleaner & Toilet Cleaner. A quick, focused fix for hard water stains across the home.",
+            "price": "₹349",
+            "compare_price": "₹598",
+            "savings": "Save ₹249",
+            "note_1": "Melts hard water stains",
+            "note_2": "Fights limescale in the bowl"
+          }
         }
       ]
     }
-  ],
-  "max_blocks": 6
+  ]
 }
 {% endschema %}

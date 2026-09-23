@@ -3,19 +3,34 @@
     "purelane_hero": {
       "type": "purelane-hero"
     },
+
     "purelane_product_grid": {
-      "type": "purelane-product-grid"
+      "type": "purelane-product-grid",
+      "settings": {
+        "eyebrow": "Shop Purelane",
+        "heading": "Clean smarter. Live better.",
+        "description": "<p>Plant-powered essentials made for everyday cleaning.</p>",
+        "collection": "all",
+        "products_to_show": 8,
+        "desktop_columns": "4",
+        "show_view_all": true,
+        "view_all_label": "Shop all products"
+      }
     },
+
     "purelane_combos": {
       "type": "purelane-combos"
     },
+
     "purelane_bundles": {
       "type": "purelane-bundles"
     },
+
     "purelane_reviews": {
       "type": "purelane-reviews"
     }
   },
+
   "order": [
     "purelane_hero",
     "purelane_product_grid",

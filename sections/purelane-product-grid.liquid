@@ -1,0 +1,244 @@
+{% liquid
+  assign selected_collection = section.settings.collection
+  assign products_limit = section.settings.products_to_show
+  assign products = selected_collection.products
+%}
+
+<section
+  id="shop"
+  class="purelane-product-grid"
+  aria-labelledby="purelane-product-grid-heading-{{ section.id }}"
+>
+  <div class="purelane-product-grid__inner page-width">
+
+    <header class="purelane-product-grid__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="purelane-product-grid__eyebrow">
+          {{ section.settings.eyebrow | escape }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2
+          id="purelane-product-grid-heading-{{ section.id }}"
+          class="purelane-product-grid__heading"
+        >
+          {{ section.settings.heading | escape }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="purelane-product-grid__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+    </header>
+
+    {% if selected_collection != blank and products.size > 0 %}
+
+      <div
+        class="purelane-product-grid__grid purelane-product-grid__grid--{{ section.settings.desktop_columns }}"
+        role="list"
+      >
+        {% for product in products limit: products_limit %}
+          <article
+            class="purelane-product-card{% unless product.available %} is-sold-out{% endunless %}"
+            role="listitem"
+          >
+            <a
+              class="purelane-product-card__image-link"
+              href="{{ product.url }}"
+              aria-label="View {{ product.title | escape }}"
+            >
+              <div class="purelane-product-card__image">
+
+                {% if product.featured_image %}
+                  {{
+                    product.featured_image
+                    | image_url: width: 900
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360, 540, 720, 900',
+                      sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw',
+                      alt: product.featured_image.alt | default: product.title
+                  }}
+                {% else %}
+                  <div class="purelane-product-card__placeholder">
+                    <span>No image</span>
+                  </div>
+                {% endif %}
+
+                {% unless product.available %}
+                  <span class="purelane-product-card__badge">
+                    Sold out
+                  </span>
+                {% endunless %}
+              </div>
+            </a>
+
+            <div class="purelane-product-card__content">
+
+              {% if product.type != blank %}
+                <p class="purelane-product-card__type">
+                  {{ product.type | escape }}
+                </p>
+              {% endif %}
+
+              <h3 class="purelane-product-card__title">
+                <a href="{{ product.url }}">
+                  {{ product.title | escape }}
+                </a>
+              </h3>
+
+              {% if product.description != blank %}
+                <p class="purelane-product-card__description">
+                  {{ product.description | strip_html | truncate: 90 | escape }}
+                </p>
+              {% endif %}
+
+              <div class="purelane-product-card__bottom">
+                <div class="purelane-product-card__price">
+                  {% if product.compare_at_price > product.price %}
+                    <span class="visually-hidden">Regular price</span>
+                    <s>{{ product.compare_at_price | money }}</s>
+                  {% endif %}
+
+                  <span>
+                    {{ product.price | money }}
+                  </span>
+                </div>
+
+                {% if product.available %}
+                  <form
+                    method="post"
+                    action="{{ routes.cart_add_url }}"
+                    class="purelane-product-card__form"
+                  >
+                    <input
+                      type="hidden"
+                      name="id"
+                      value="{{ product.selected_or_first_available_variant.id }}"
+                    >
+
+                    <button
+                      type="submit"
+                      class="purelane-product-card__add"
+                      aria-label="Add {{ product.title | escape }} to cart"
+                    >
+                      <span>Add</span>
+                      <span aria-hidden="true">→</span>
+                    </button>
+                  </form>
+                {% else %}
+                  <span class="purelane-product-card__unavailable">
+                    Sold out
+                  </span>
+                {% endif %}
+              </div>
+
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+
+      {% if section.settings.show_view_all %}
+        <div class="purelane-product-grid__footer">
+          <a
+            class="purelane-product-grid__view-all"
+            href="{{ selected_collection.url }}"
+          >
+            {{ section.settings.view_all_label | escape }}
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      {% endif %}
+
+    {% else %}
+
+      <div class="purelane-product-grid__empty">
+        <p>Select a collection to display products.</p>
+      </div>
+
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Purelane Product Grid",
+  "tag": "section",
+  "class": "section-purelane-product-grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Shop Purelane"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Clean smarter. Live better."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Plant-powered essentials made for everyday cleaning.</p>"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Product collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "desktop_columns",
+      "label": "Desktop columns",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show view all button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View all button label",
+      "default": "Shop all products"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Product Grid"
+    }
+  ]
+}
+{% endschema %}

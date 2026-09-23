@@ -9,76 +9,171 @@
  */
 {
   "sections": {
-    "image_banner": {
-      "type": "image-banner",
+    "purelane_hero": {
+      "type": "purelane-hero",
+      "settings": {
+        "eyebrow": "Plant-powered homecare",
+        "heading_line_1": "Clean",
+        "heading_line_2": "That",
+        "heading_accent": "Lasts",
+        "description": "Homecare that works on the toughest grime, made from plants. Kind to your home, your family and the world outside it.",
+        "primary_label": "Shop now",
+        "primary_link": "",
+        "secondary_label": "How it works",
+        "secondary_link": "",
+        "product": "",
+        "product_label": "Purelane essential",
+        "badge_1": "Plant powered",
+        "badge_2": "Safe for kids & pets",
+        "badge_3": "Zero harsh chemicals"
+      }
+    },
+    "purelane_product_grid": {
+      "type": "purelane-product-grid",
+      "settings": {
+        "eyebrow": "Shop Purelane",
+        "heading": "Clean smarter. Live better.",
+        "description": "<p>Plant-powered essentials made for everyday cleaning.</p>",
+        "collection": "purelane-products",
+        "products_to_show": 8,
+        "desktop_columns": "4",
+        "show_view_all": true,
+        "view_all_label": "Shop all products"
+      }
+    },
+    "purelane_combos": {
+      "type": "purelane-combos",
       "blocks": {
-        "heading": {
-          "type": "heading",
+        "combo_xFkY8K": {
+          "type": "combo",
           "settings": {
-            "heading": "Browse our latest products",
-            "heading_size": "h0"
+            "product": "natural-herbal-floor-cleaner",
+            "combo_label": "CLEANING FAVORITE",
+            "description": "A practical combination for your home."
           }
         },
-        "button": {
-          "type": "buttons",
+        "combo_eXJVFJ": {
+          "type": "combo",
           "settings": {
-            "button_label_1": "Shop all",
-            "button_link_1": "shopify://collections/all",
-            "button_style_secondary_1": true,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
+            "product": "gentle-hydrating-liquid-handwash",
+            "combo_label": "EVERYDAY PAIR",
+            "description": "Pair two essentials for everyday cleaning."
+          }
+        },
+        "combo_fiWbk8": {
+          "type": "combo",
+          "settings": {
+            "product": "purelane-plant-based-multi-surface-home-kitchen-cleaner-with-natural-essential-oils-for-everyday-deep-cleaning",
+            "combo_label": "BEST SELLER",
+            "description": "A simple everyday cleaning essential."
           }
         }
       },
       "block_order": [
-        "heading",
-        "button"
+        "combo_xFkY8K",
+        "combo_eXJVFJ",
+        "combo_fiWbk8"
       ],
       "settings": {
-        "image_overlay_opacity": 40,
-        "image_height": "large",
-        "desktop_content_position": "bottom-center",
-        "show_text_box": false,
-        "image_behavior": "none",
-        "desktop_content_alignment": "center",
-        "color_scheme": "scheme-3",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": false,
-        "show_text_below": false
+        "eyebrow": "BEST-SELLING COMBOS",
+        "heading": "Better together.",
+        "description": "<p>Pair your Purelane essentials and save on everyday cleaning.</p>",
+        "show_shop_all": true,
+        "shop_all_label": "SHOP ALL",
+        "shop_all_link": "",
+        "button_label": "SHOP COMBO"
       }
     },
-    "featured_collection": {
-      "type": "featured-collection",
+    "purelane_bundles": {
+      "type": "purelane-bundles",
+      "blocks": {
+        "bundle_FzQpgg": {
+          "type": "bundle",
+          "settings": {
+            "product": "laundry-detergent",
+            "label": "HOME FAVORITE",
+            "description": "Plant-powered essentials made for everyday home care.",
+            "button_label": "Shop bundle"
+          }
+        },
+        "bundle_3YkKHK": {
+          "type": "bundle",
+          "settings": {
+            "product": "organic-dishwash-gel",
+            "label": "EVERYDAY ESSENTIALS",
+            "description": "Keep your everyday cleaning routine simple and effective.",
+            "button_label": "Shop bundle"
+          }
+        },
+        "bundle_qRtTBg": {
+          "type": "bundle",
+          "settings": {
+            "product": "non-toxic-toilet-cleaner",
+            "label": "SAVE MORE",
+            "description": "A simple combination for everyday cleaning.",
+            "button_label": "Shop bundle"
+          }
+        }
+      },
+      "block_order": [
+        "bundle_FzQpgg",
+        "bundle_3YkKHK",
+        "bundle_qRtTBg"
+      ],
       "settings": {
-        "title": "Featured products",
-        "heading_size": "h2",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "collection": "all",
-        "products_to_show": 8,
-        "columns_desktop": 4,
-        "color_scheme": "scheme-1",
-        "full_width": false,
-        "show_view_all": true,
-        "view_all_style": "solid",
-        "enable_desktop_slider": false,
-        "swipe_on_mobile": false,
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "none",
-        "columns_mobile": "2",
-        "padding_top": 44,
-        "padding_bottom": 36
+        "eyebrow": "BUNDLES",
+        "heading": "Bundles that save more.",
+        "description": "<p>Stock up on plant-powered essentials and save on your everyday routine.</p>"
+      }
+    },
+    "purelane_reviews": {
+      "type": "purelane-reviews",
+      "blocks": {
+        "review_paJdBj": {
+          "type": "review",
+          "settings": {
+            "review": "The floor cleaner smells fresh without the harsh chemical smell.",
+            "name": "Riya",
+            "rating": 5,
+            "verified": false
+          }
+        },
+        "review_CkBtnV": {
+          "type": "review",
+          "settings": {
+            "review": "Finally a cleaner that feels good to use every day.",
+            "name": "Ananya",
+            "rating": 5,
+            "verified": false
+          }
+        },
+        "review_VWfaVP": {
+          "type": "review",
+          "settings": {
+            "review": "The products clean beautifully without the harsh smell.",
+            "name": "Aarav",
+            "rating": 5,
+            "verified": false
+          }
+        }
+      },
+      "block_order": [
+        "review_paJdBj",
+        "review_CkBtnV",
+        "review_VWfaVP"
+      ],
+      "settings": {
+        "eyebrow": "Loved by conscious homes",
+        "heading": "Good for your home. Loved by your family.",
+        "description": "<p>Real feedback from people making everyday cleaning a little better.</p>"
       }
     }
   },
   "order": [
-    "image_banner",
-    "featured_collection"
+    "purelane_hero",
+    "purelane_product_grid",
+    "purelane_combos",
+    "purelane_bundles",
+    "purelane_reviews"
   ]
 }
